@@ -1,0 +1,42 @@
+/* Loader curtain */
+.loader-curtain {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: #000000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+body.light-mode .loader-curtain { background: #ffffff; }
+
+.loader-curtain.done { opacity: 0; transform: scale(1.02); pointer-events: none; }
+
+.loader-logo {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #d0d0d8;
+    letter-spacing: -0.03em;
+    animation: loaderSpin 3s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+}
+
+body.light-mode .loader-logo { color: #212529; }
+
+.loader-dot { color: #8080a0; }
+body.light-mode .loader-dot { color: #5c7cfa; }
+
+@keyframes loaderSpin {
+    0%, 100% { transform: rotate(0deg) scale(1); opacity: 0.8; }
+    25% { transform: rotate(2deg) scale(1.02); opacity: 1; }
+    50% { transform: rotate(0deg) scale(1); opacity: 0.8; }
+    75% { transform: rotate(-2deg) scale(1.02); opacity: 1; }
+}
+
+/* Prevent FOUC */
+.body-preload { visibility: hidden; opacity: 0; }
+
+.body-preload.ready { visibility: visible; opacity: 1; transition: opacity 0.4s ease; }

@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luis Hostos — Desarrollo web freelance y automatización</title>
+
+    <meta name="description"
+        content="Luis Hostos — Desarrollador web freelance desde Perú. Sitios corporativos, paneles admin y automatizaciones para negocios pequeños.">
+    <meta property="og:title" content="Luis Hostos — Desarrollo Web Freelance">
+    <meta property="og:description"
+        content="Construyo sitios web, paneles admin y automatizaciones para negocios pequeños.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="./img/og-preview.jpg">
+    <meta property="og:url" content="https://luishostos.dev">
+
+    <link rel="icon" type="image/x-icon" href="./img/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="./img/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./img/favicon-16.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+
+    <link rel="stylesheet" href="css/loader.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/hero.css">
+    <link rel="stylesheet" href="css/sections.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
+    <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
+
+    <style>
+        html {
+            visibility: hidden;
+            opacity: 0
+        }
+    </style>
+</head>
+
+<body class="body-preload">
+
+    <!-- Loader -->
+    <div id="loader-curtain" class="loader-curtain">
+        <div class="loader-logo">LH<span class="loader-dot">.</span></div>
+    </div>
+
+    <div id="scroll-progress"></div>
+    <canvas id="particles"></canvas>
+    <div id="mouse-glow"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-inner">
+            <a href="#" class="nav-logo">LH<span class="logo-dot">.</span></a>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="#services" class="nav-link" data-section="services" data-i18n="nav.services">Servicios</a></li>
+                <li><a href="#process" class="nav-link" data-section="process" data-i18n="nav.process">Proceso</a></li>
+                <li><a href="#experience" class="nav-link" data-section="experience" data-i18n="nav.trayectoria">Trayectoria</a></li>
+                <li><a href="#skills" class="nav-link" data-section="skills" data-i18n="nav.stack">Stack</a></li>
+                <li><a href="#projects" class="nav-link" data-section="projects" data-i18n="nav.proyectos">Proyectos</a></li>
+                <li><a href="#contact" class="nav-link" data-section="contact" data-i18n="nav.contacto">Contacto</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="nav-icon-btn" id="lang-toggle" aria-label="Cambiar idioma">
+                    <i class="fas fa-globe"></i>
+                    <span class="lang-label">ES</span>
+                </button>
+                <button class="nav-icon-btn" id="theme-toggle" aria-label="Cambiar tema">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+            <div class="nav-toggle" id="nav-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section id="hero" class="hero">
+        <div class="hero-inner">
+            <div class="hero-photo-block">
+                <div class="photo-glow-wrapper">
+                    <div class="photo-glow glow-a"></div>
+                    <div class="photo-glow glow-b"></div>
+                    <div class="photo-glow glow-c"></div>
+                </div>
+                <div class="photo-ring"></div>
+                <div class="photo-glow-reveal"></div>
+                <img src="./img/fotoperfil.jpg" alt="Foto de perfil de Luis Hostos" class="hero-photo">
+            </div>
+            <div class="hero-text-block">
+                <div class="available-badge" data-reveal>
+                    <span class="pulse-dot"></span>
+                    <span data-i18n="hero.available">Disponible para proyectos</span>
+                </div>
+                <p class="hero-greeting" data-i18n="hero.greeting">Hola, soy</p>
+                <h1 class="hero-name" id="hero-name">Luis Hostos</h1>
+                <div class="hero-headline" data-i18n="hero.headline">Construyo sitios web, paneles admin y automatizaciones a medida para negocios pequeños.</div>
+                <div class="hero-role-line">
+                    <span class="role-dash"></span>
+                    <span class="hero-role" id="typed-role"></span>
+                    <span class="cursor-blink">|</span>
+                </div>
+                <p class="hero-bio" data-i18n="hero.bio">Entiendo tu negocio antes de escribir una línea de código. Proyecto en producción. Respondo en menos de 24 horas. Inglés avanzado. Desde Perú.</p>
+
+                <!-- Metrics -->
+                <div class="hero-metrics" id="hero-metrics">
+                    <div class="metric">
+                        <div class="metric-row">
+                            <span class="metric-num c-soul" data-target="4">0</span>
+                            <span class="metric-plus c-green">+</span>
+                        </div>
+                        <span class="metric-label" data-i18n="hero.metric1">Proyectos entregados</span>
+                    </div>
+                    <div class="metric-divider"></div>
+                    <div class="metric">
+                        <div class="metric-row">
+                            <span class="metric-num c-accent" data-target="12">0</span>
+                            <span class="metric-plus c-green">+</span>
+                        </div>
+                        <span class="metric-label" data-i18n="hero.metric2">Tecnologías en stack</span>
+                    </div>
+                    <div class="metric-divider"></div>
+                    <div class="metric">
+                        <div class="metric-row">
+                            <span class="metric-num c-green" data-target="1">0</span>
+                        </div>
+                        <span class="metric-label" data-i18n="hero.metric3">Cliente en producción activa</span>
+                    </div>
+                </div>
+
+                <!-- CTAs -->
+                <div class="hero-actions">
+                    <a href="#services" class="btn-primary" data-i18n="hero.btn_services">Ver servicios <i class="fas fa-arrow-right"></i></a>
+                    <a href="#projects" class="btn-outline" data-i18n="hero.btn_projects">Ver proyectos <i class="fas fa-code"></i></a>
+                </div>
+
+                <!-- Social — icons gray by default, brand color on hover -->
+                <div class="hero-social">
+                    <a href="https://github.com/Luanho11" target="_blank" class="btn-ghost btn-social-default btn-social-github" title="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/luis-hostos/" target="_blank" class="btn-ghost btn-social-default btn-social-linkedin" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://www.fiverr.com/luanho11" target="_blank" class="btn-ghost btn-social-default btn-fiverr" title="Fiverr">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="fiverr-svg">
+                            <path d="M22.508 10.678h-6.48V9.078c0-1.824 1.056-2.88 2.88-2.88h1.056V2.4h-1.92c-3.264 0-5.472 2.304-5.472 5.664v2.614H9.508V7.68h1.632V5.184H9.508V1.632H6.724V5.184H4.132V7.68h2.592v2.998H3.228v2.592h3.496v6.288c0 .48.384.864.864.864h1.536c.48 0 .864-.384.864-.864v-6.288h2.688v-2.592h-2.688V7.68h3.06v7.404c0 .48.384.864.864.864h1.44c.48 0 .864-.384.864-.864v-7.404h3.06v-2.592h-2.112v1.6h-1.344z" />
+                        </svg>
+                    </a>
+                    <a href="https://www.freelancer.com/u/luanho11" target="_blank" class="btn-ghost btn-social-default btn-freelancer" title="Freelancer">
+                        <svg viewBox="0 0 122.88 91.38" xmlns="http://www.w3.org/2000/svg" class="freelancer-svg">
+                            <path d="M72.19,0l8.37,11.74L122.88,0Zm-44,91.38L51.08,69,37.3,54.19,28.18,91.38ZM68.7,0,56.46,11l20.59.77L68.7,0ZM21.11,0l4.42,9,24.23,1.51L21.11,0Zm13,46.73L52,13.33,0,10.52,34.09,46.73Zm2.08,2.11L53.08,67,71.73,48.72l5.79-34L54.79,13.51,36.17,48.84Zm0,0Z" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-hint">
+            <span data-i18n="hero.scroll">Scroll</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- Services — Service cards without prices -->
+    <section id="services" class="section services-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title" data-i18n="services.title">Lo que puedo hacer por ti</h2>
+                <p class="section-subtitle" data-i18n="services.subtitle">Servicios enfocados en lo que tu negocio necesita. Cotización sin compromiso.</p>
+            </div>
+
+            <!-- Service cards grid -->
+            <div class="services-grid">
+                <!-- Service 1: Web corporativa -->
+                <div class="service-card" data-reveal>
+                    <div class="service-card-visual">
+                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=260&fit=crop" alt="Web corporativa" class="service-card-img" loading="lazy">
+                        <div class="service-card-overlay-icon"><i class="fas fa-globe"></i></div>
+                    </div>
+                    <div class="service-card-body">
+                        <div class="service-card-header">
+                            <h3 data-i18n="plan1.title">Web Corporativa</h3>
+                            <span class="service-duration" data-i18n="plan1.duration">Hosting 1 año incluido</span>
+                        </div>
+                        <p class="service-desc" data-i18n="plan1.desc">Tu negocio existe en internet o no existe. Sitio profesional con contacto, servicios y diseño responsive.</p>
+                        <ul class="service-features">
+                            <li><i class="fas fa-check"></i> <span data-i18n="plan1.f1">Diseño responsive</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="plan1.f2">SEO básico</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="plan1.f3">Hosting 1 año</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="plan1.f4">Formulario de contacto</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="plan1.f5">Entrega en 7 días hábiles</span></li>
+                        </ul>
+                        <a href="https://wa.me/51970465608?text=Hola%2C%20me%20interesa%20el%20plan%20Web%20Corporativa" class="service-cta" data-i18n="plan1.cta">Cotizar sin compromiso</a>
+                    </div>
+                </div>
+
+                <!-- Service 2: Panel Admin — Recommended -->
+                <div class="service-card service-card--recommended" data-reveal>
+                    <div class="service-recommended-badge" data-i18n="services.recommended">Recomendado</div>
+                    <div class="service-card-visual">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=260&fit=crop" alt="Panel admin" class="service-card-img" loading="lazy">
+                        <div class="service-card-overlay-icon"><i class="fas fa-columns"></i></div>
+                    </div>
+                    <div class="service-card-body">
+                        <div class="service-card-header">
+                            <h3 data-i18n="plan2.title">Panel Admin</h3>
+                            <span class="service-duration" data-i18n="plan2.duration">Hosting 1 año incluido</span>
+                        </div>
+                        <p class="service-desc" data-i18n="plan2.desc">Deja de gestionar tu negocio en Excel. Panel personalizado para gestionar usuarios, productos o reservas.</p>
+                        <ul class="service-features">
+                            <li><i class="fas fa-check"></i> <span data-i18n="plan2.f1">Todo del plan Web</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="plan2.f2">CRUD completo</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="plan2.f3">Autenticación y roles</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="plan2.f4">Base de datos incluida</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="plan2.f5">Panel de administración</span></li>
+                        </ul>
+                        <a href="https://wa.me/51970465608?text=Hola%2C%20me%20interesa%20el%20plan%20Panel%20Admin" class="service-cta service-cta--primary" data-i18n="plan2.cta">Cotizar sin compromiso</a>
+                    </div>
+                </div>
+
+                <!-- Service 3: Mantenimiento -->
+                <div class="service-card" data-reveal>
+                    <div class="service-card-visual">
+                        <img src="https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=600&h=260&fit=crop" alt="Mantenimiento" class="service-card-img" loading="lazy">
+                        <div class="service-card-overlay-icon"><i class="fas fa-tools"></i></div>
+                    </div>
+                    <div class="service-card-body">
+                        <div class="service-card-header">
+                            <h3 data-i18n="plan3.title">Mantenimiento</h3>
+                            <span class="service-duration" data-i18n="plan3.duration">Renovación mensual</span>
+                        </div>
+                        <p class="service-desc" data-i18n="plan3.desc">Tu web necesita cuidado después de lanzarla. Soporte técnico continuo por una cuota mensual fija.</p>
+                        <ul class="service-features">
+                            <li><i class="fas fa-check"></i> <span data-i18n="plan3.f1">Backups automáticos</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="plan3.f2">Actualizaciones</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="plan3.f3">Corrección de errores</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="plan3.f4">Soporte técnico</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="plan3.f5">Sin sorpresas</span></li>
+                        </ul>
+                        <a href="https://wa.me/51970465608?text=Hola%2C%20me%20interesa%20el%20plan%20Mantenimiento" class="service-cta" data-i18n="plan3.cta">Cotizar sin compromiso</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Consult CTA -->
+            <div class="pricing-consult" data-reveal>
+                <div class="pricing-consult-icon"><i class="fas fa-comments"></i></div>
+                <div class="pricing-consult-text">
+                    <h4 data-i18n="services.consult_title">¿No estás seguro qué necesitas?</h4>
+                    <p data-i18n="services.consult_desc">Conversemos sin compromiso. Te ayudo a definir el alcance ideal para tu negocio.</p>
+                </div>
+                <a href="https://wa.me/51970465608?text=Hola%2C%20quiero%20una%20cotización%20sin%20compromiso" class="pricing-consult-btn" data-i18n="services.consult_cta">Consultar gratis</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process — 2x3 Grid style like template -->
+    <section id="process" class="section process-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title" data-i18n="process.title">Cómo trabajo</h2>
+                <p class="section-subtitle" data-i18n="process.subtitle">Metodología clara para que sepas qué esperar en cada etapa</p>
+            </div>
+            <div class="toc-grid">
+                <!-- Row 1 -->
+                <div class="toc-card" data-reveal>
+                    <div class="toc-card-top">
+                        <span class="toc-number">01</span>
+                        <div class="toc-icon"><i class="fas fa-search"></i></div>
+                    </div>
+                    <h4 data-i18n="step1.title">Diagnóstico</h4>
+                    <p data-i18n="step1.desc">Entiendo tu negocio, necesidad y alcance. Sin compromiso.</p>
+                </div>
+                <div class="toc-card" data-reveal>
+                    <div class="toc-card-top">
+                        <span class="toc-number">02</span>
+                        <div class="toc-icon toc-icon--warm"><i class="fas fa-file-alt"></i></div>
+                    </div>
+                    <h4 data-i18n="step2.title">Propuesta</h4>
+                    <p data-i18n="step2.desc">Te envío un documento claro: precio, entregables y plazos.</p>
+                </div>
+                <!-- Row 2 -->
+                <div class="toc-card" data-reveal>
+                    <div class="toc-card-top">
+                        <span class="toc-number">03</span>
+                        <div class="toc-icon toc-icon--green"><i class="fas fa-code"></i></div>
+                    </div>
+                    <h4 data-i18n="step3.title">Desarrollo + validación</h4>
+                    <p data-i18n="step3.desc">Construyo y pruebo cada funcionalidad con herramientas modernas, incluyendo IA como acelerador. Tú revisas en entorno de prueba antes de aprobar.</p>
+                </div>
+                <div class="toc-card" data-reveal>
+                    <div class="toc-card-top">
+                        <span class="toc-number">04</span>
+                        <div class="toc-icon toc-icon--accent"><i class="fas fa-rocket"></i></div>
+                    </div>
+                    <h4 data-i18n="step4.title">Entrega</h4>
+                    <p data-i18n="step4.desc">Puesta en producción, capacitación básica y entrega de credenciales.</p>
+                </div>
+                <!-- Row 3 -->
+                <div class="toc-card" data-reveal>
+                    <div class="toc-card-top">
+                        <span class="toc-number">05</span>
+                        <div class="toc-icon toc-icon--shield"><i class="fas fa-life-ring"></i></div>
+                    </div>
+                    <h4 data-i18n="step5.title">Soporte</h4>
+                    <p data-i18n="step5.desc">30 días de ajustes incluidos. Plan de mantenimiento opcional.</p>
+                </div>
+                <div class="toc-card" data-reveal>
+                    <div class="toc-card-top">
+                        <span class="toc-number">06</span>
+                        <div class="toc-icon toc-icon--warm"><i class="fas fa-sync-alt"></i></div>
+                    </div>
+                    <h4 data-i18n="step6.title">Mejora continua</h4>
+                    <p data-i18n="step6.desc">Analizo métricas y Feedback para evolucionar tu producto según datos reales de uso.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience — Updated content -->
+    <section id="experience" class="section experience-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title" data-i18n="exp.title">Trayectoria</h2>
+                <p class="section-subtitle" data-i18n="exp.subtitle">Resultado, no solo conocimiento</p>
+            </div>
+            <div class="timeline">
+                <div class="timeline-item" data-reveal>
+                    <div class="timeline-marker">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-line"></div>
+                    </div>
+                    <div class="timeline-card">
+                        <div class="timeline-top">
+                            <div>
+                                <h3 data-i18n="exp.job1.title">Desarrollador Web Freelance</h3>
+                                <span class="timeline-company">Deriva Jurídico</span>
+                            </div>
+                            <span class="timeline-date">Set 2025 — Presente</span>
+                        </div>
+                        <ul class="timeline-list">
+                            <li data-i18n="exp.job1.bullet1">Lideré el desarrollo end-to-end de una plataforma jurídica digital desde el levantamiento de requisitos hasta producción</li>
+                            <li data-i18n="exp.job1.bullet2">Construí una arquitectura serverless con Firebase Hosting, Firestore y Cloud Functions</li>
+                            <li data-i18n="exp.job1.bullet3">Implementé autenticación, panel administrativo y gestión de publicaciones para múltiples usuarios</li>
+                            <li data-i18n="exp.job1.bullet4">Desarrollé renderizado dinámico de metadatos Open Graph para mejorar SEO y visualización en redes sociales</li>
+                            <li data-i18n="exp.job1.bullet5">Realicé pruebas de carga con K6 y optimizaciones de rendimiento antes del despliegue</li>
+                            <li data-i18n="exp.job1.bullet6">Elaboré documentación técnica y manuales operativos para administración y mantenimiento del sistema</li>
+                        </ul>
+                        <div class="timeline-tags">
+                            <span><i class="fas fa-globe"></i> derivajuridico.com</span>
+                            <span data-i18n="exp.inprod"><i class="fas fa-check"></i> En producción</span>
+                            <span class="timeline-updated"><i class="fas fa-clock"></i> <span data-i18n="exp.lastupdate">Últ. actualización: 04/05/2026</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item" data-reveal>
+                    <div class="timeline-marker">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-line"></div>
+                    </div>
+                    <div class="timeline-card">
+                        <div class="timeline-top">
+                            <div>
+                                <h3 data-i18n="exp.job2.title">Practicante — Desarrollo Web</h3>
+                                <span class="timeline-company">Asociación Méndez & Asociados</span>
+                            </div>
+                            <span class="timeline-date">Ene — Jun 2024</span>
+                        </div>
+                        <ul class="timeline-list">
+                            <li data-i18n="exp.job2.bullet1">Interfaces responsivas con HTML5, CSS3 y JavaScript</li>
+                            <li data-i18n="exp.job2.bullet2">Validación de formularios, flujos de usuario e integración de APIs REST</li>
+                            <li data-i18n="exp.job2.bullet3">Pruebas de endpoints con Postman y control de versiones con Git</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Formación -->
+                <div class="timeline-item" data-reveal>
+                    <div class="timeline-marker">
+                        <div class="timeline-dot timeline-dot--edu"></div>
+                    </div>
+                    <div class="timeline-card timeline-card--edu">
+                        <div class="timeline-top">
+                            <div>
+                                <h3 data-i18n="exp.edu.title">Formación</h3>
+                            </div>
+                        </div>
+                        <ul class="timeline-list">
+                            <li data-i18n="exp.edu.bullet1">Técnico en Computación e Informática — CIBERTEC (2021–2024)</li>
+                            <li data-i18n="exp.edu.bullet2">Ingeniería de Sistemas Computacionales — UPN (En curso)</li>
+                        </ul>
+                        <div class="lang-showcase-inline">
+                            <div class="lang-pill lang-pill-es">
+                                <span class="lang-flag">🇪🇸</span>
+                                <span class="lang-pill-name">Español</span>
+                                <span class="lang-pill-level">Nativo</span>
+                            </div>
+                            <div class="lang-pill lang-pill-en">
+                                <span class="lang-flag">🇬🇧</span>
+                                <span class="lang-pill-name">English</span>
+                                <span class="lang-pill-level">C1</span>
+                            </div>
+                            <div class="lang-pill lang-pill-fr">
+                                <span class="lang-flag">🇫🇷</span>
+                                <span class="lang-pill-name">Français</span>
+                                <span class="lang-pill-level">Básico</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills / Stack -->
+    <section id="skills" class="section skills-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title" data-i18n="skills.title">Stack técnico</h2>
+                <p class="section-subtitle" data-i18n="skills.subtitle">Lo que domino y lo que incorporo</p>
+            </div>
+            <div class="skills-panels">
+                <div class="skills-panel active" id="panel-dominio">
+                    <div class="skill-group">
+                        <h4 class="skill-group-title">Desarrollo Web</h4>
+                        <div class="skill-items">
+                            <span class="skill-item"><i class="devicon-html5-plain colored"></i>HTML5</span>
+                            <span class="skill-item"><i class="devicon-css3-plain colored"></i>CSS3</span>
+                            <span class="skill-item"><i class="devicon-javascript-plain colored"></i>JavaScript</span>
+                            <span class="skill-item"><i class="devicon-react-original colored"></i>React</span>
+                            <span class="skill-item exploring"><i class="devicon-tailwindcss-plain colored"></i>Tailwind CSS <span class="exp-tag">Práctico</span></span>
+                            <span class="skill-item exploring"><i class="devicon-typescript-plain colored"></i>TypeScript <span class="exp-tag">Fundamentos</span></span>
+                        </div>
+                    </div>
+                    <div class="skill-group">
+                        <h4 class="skill-group-title">Backend</h4>
+                        <div class="skill-items">
+                            <span class="skill-item"><i class="devicon-java-plain colored"></i>Java</span>
+                            <span class="skill-item"><i class="devicon-csharp-plain colored"></i>C#</span>
+                            <span class="skill-item"><i class="devicon-nodejs-plain colored"></i>Node.js</span>
+                            <span class="skill-item"><i class="devicon-spring-plain colored"></i>Spring Boot</span>
+                            <span class="skill-item"><i class="fas fa-key c-jwt"></i>JWT</span>
+                            <span class="skill-item"><i class="fas fa-plug c-rest"></i>APIs REST</span>
+                        </div>
+                    </div>
+                    <div class="skill-group">
+                        <h4 class="skill-group-title">Bases de Datos</h4>
+                        <div class="skill-items">
+                            <span class="skill-item"><i class="fas fa-database c-sql"></i>SQL</span>
+                            <span class="skill-item"><i class="devicon-mysql-plain colored"></i>MySQL</span>
+                            <span class="skill-item"><i class="devicon-microsoftsqlserver-plain colored"></i>SQL Server</span>
+                            <span class="skill-item"><i class="devicon-firebase-plain colored"></i>Firebase</span>
+                            <span class="skill-item"><i class="devicon-mongodb-plain colored"></i>MongoDB</span>
+                        </div>
+                    </div>
+                    <div class="skill-group">
+                        <h4 class="skill-group-title">Herramientas & QA</h4>
+                        <div class="skill-items">
+                            <span class="skill-item"><i class="devicon-git-plain colored"></i>Git</span>
+                            <span class="skill-item"><i class="devicon-github-original"></i>GitHub</span>
+                            <span class="skill-item"><i class="devicon-postman-plain colored"></i>Postman</span>
+                            <span class="skill-item"><i class="fas fa-file-code c-swagger"></i>Swagger-UI</span>
+                            <span class="skill-item"><i class="fas fa-bolt c-k6"></i>K6</span>
+                            <span class="skill-item"><i class="fas fa-search-plus c-analysis"></i>Análisis Funcional</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects — AFTER Stack técnico -->
+    <section id="projects" class="section projects-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title" data-i18n="proj.title">Proyectos</h2>
+                <p class="section-subtitle" data-i18n="proj.subtitle">Construido y validado de principio a fin</p>
+            </div>
+            <div class="projects-grid">
+                <div class="project-card" data-reveal>
+                    <div class="project-bg" style="background-image:url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop')"></div>
+                    <div class="project-overlay">
+                        <span class="project-badge" data-i18n="proj.inprod">En producción</span>
+                        <h3>Deriva Jurídico</h3>
+                        <p data-i18n="proj.p1">Sitio corporativo completo: autenticación, panel admin, CRUD, validación de flujos y pruebas de rendimiento con K6.</p>
+                        <div class="project-tech-row"><span>HTML5</span><span>CSS3</span><span>JavaScript</span><span>Firebase</span><span>K6</span></div>
+                        <a href="https://derivajuridico.com" target="_blank" class="project-link" data-i18n="proj.live">Ver en vivo <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="project-card" data-reveal>
+                    <div class="project-bg" style="background-image:url('https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=800&h=600&fit=crop')"></div>
+                    <div class="project-overlay">
+                        <h3 data-i18n="proj.p2.title">Sistema de acceso con roles para SaaS</h3>
+                        <p data-i18n="proj.p2">Login seguro con gestión de roles, rutas protegidas y recuperación de contraseña.</p>
+                        <div class="project-tech-row"><span>JWT</span><span>Node.js</span><span>React</span><span>REST</span></div>
+                        <a href="https://github.com/Luanho11" target="_blank" class="project-link" data-i18n="proj.code">Ver código <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="project-card" data-reveal>
+                    <div class="project-bg" style="background-image:url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop')"></div>
+                    <div class="project-overlay">
+                        <h3 data-i18n="proj.p3.title">API REST para reservas y disponibilidad</h3>
+                        <p data-i18n="proj.p3">Backend Java + Spring Boot para reservas. Endpoints REST, validación de negocio y pruebas con Postman.</p>
+                        <div class="project-tech-row"><span>Java</span><span>Spring Boot</span><span>REST</span><span>Postman</span></div>
+                        <a href="https://github.com/Luanho11" target="_blank" class="project-link" data-i18n="proj.code">Ver código <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="project-card" data-reveal>
+                    <div class="project-bg" style="background-image:url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&h=600&fit=crop')"></div>
+                    <div class="project-overlay">
+                        <h3 data-i18n="proj.p4.title">Panel de gestión con CRUD para negocio local</h3>
+                        <p data-i18n="proj.p4">Aplicación full stack con registro, consulta, actualización y eliminación. Diseño de estructura de datos, validaciones y comunicación frontend-backend.</p>
+                        <div class="project-tech-row"><span>React</span><span>Node.js</span><span>MySQL</span><span>REST</span></div>
+                        <a href="https://github.com/Luanho11" target="_blank" class="project-link" data-i18n="proj.code">Ver código <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="section contact-section">
+        <div class="container">
+            <div class="contact-block">
+                <p class="contact-label" data-i18n="contact.label">¿Tu negocio necesita una web que funcione de verdad?</p>
+                <h2 class="contact-title" data-i18n="contact.title">Hablemos.</h2>
+                <p class="contact-sub" data-i18n="contact.sub">Trabajo con negocios pequeños que necesitan presencia digital real, paneles de gestión o automatizaciones a medida. Respondo en menos de 24 horas.</p>
+                <div class="contact-links">
+                    <a href="mailto:luis.hostos.hostos@gmail.com" class="contact-link-item"><i class="fas fa-envelope"></i> luis.hostos.hostos@gmail.com</a>
+                    <a href="tel:+51970465608" class="contact-link-item"><i class="fas fa-phone"></i> (+51) 970 465 608</a>
+                </div>
+                <div class="cv-download-wrap">
+                    <a href="./cv-luis-hostos.pdf" class="btn-outline btn-cv" download="CV-Luis-Hostos-Dev.pdf">
+                        <i class="fas fa-download"></i> <span data-i18n="contact.cv">Descargar CV</span>
+                    </a>
+                </div>
+                <p class="contact-urgency" data-i18n="contact.urgency">Soy de Perú. Actualmente tengo disponibilidad para proyectos nuevos.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>&copy; 2026 Luis Hostos</p>
+    </footer>
+    <button id="scroll-top" class="scroll-top"><i class="fas fa-chevron-up"></i></button>
+
+    <!-- WhatsApp -->
+    <a href="https://wa.me/51970465608?text=Hola%2C%20visit%C3%A9%20tu%20portfolio%20y%20quiero%20una%20cotizaci%C3%B3n%20para%20un%20proyecto%20de%20%5Btipo%5D" class="whatsapp-float" target="_blank" rel="noopener noreferrer">
+        <i class="fab fa-whatsapp"></i>
+        <span class="whatsapp-tooltip">¿Cotización gratis?</span>
+    </a>
+
+    <script src="js/loader.js"></script>
+    <script src="js/particles-system.js"></script>
+    <script src="js/mouse-effects.js"></script>
+    <script src="js/scroll-animations.js"></script>
+    <script src="js/hero-animations.js"></script>
+    <script src="js/skills-interactions.js"></script>
+    <script src="js/i18n.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
