@@ -1,0 +1,14 @@
+{
+  "name": "luis-portfolio-minimal-v17",
+  "private": true,
+  "version": "17.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0"
+  },
+  "devDependencies": {
+    "vite": "^7.1.5"
+  }
+}
