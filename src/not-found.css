@@ -1,0 +1,20 @@
+.not-found {
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  min-height: 100svh;
+  max-width: 1000px;
+  margin: auto;
+  padding: 64px 32px;
+}
+
+.not-found h1 {
+  max-width: 13ch;
+  margin: 0;
+  font: 600 clamp(3rem, 8vw, 6rem)/1 var(--display);
+  letter-spacing: -.035em;
+}
+
+.not-found p { max-width: 44ch; margin: 28px 0; color: var(--muted); }
+
+@media (max-width: 640px) { .not-found { padding: 40px 24px; } }

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 300">
+<g fill="#005578">
+  <circle cx="150" cy="34" r="13"/><circle cx="205" cy="34" r="13"/><circle cx="260" cy="34" r="13"/><circle cx="315" cy="34" r="13"/>
+  <path d="M126 72h212v74c0 74-45 113-106 113S126 220 126 146V72zm39 39v37h134v-37H165zm0 77c8 21 29 35 67 35s59-14 67-35H165z"/>
+</g>
+<text x="240" y="292" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="54" font-weight="700" letter-spacing="12" fill="#005578">CIBERTEC</text>
+</svg>

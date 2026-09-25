@@ -11,15 +11,11 @@
   <meta property="og:locale" content="es_PE" />
   <meta property="og:site_name" content="Luis Hostos" />
   <meta property="og:title" content="Perfil y experiencia — Luis Hostos" />
-  <meta property="og:description" content="Experiencia en NOOVA y Deriva Jurídico, formación en UPN y CIBERTEC, tecnologías y CV de Luis Hostos." />
+  <meta property="og:description" content="Experiencia profesional, formación y tecnologías de Luis Hostos." />
   <meta property="og:url" content="https://luanho11.github.io/portfolio-2026/about.html" />
   <meta property="og:image" content="https://luanho11.github.io/portfolio-2026/og-image.png" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Luis Hostos. Desarrollo web y sistemas. Lima, Perú." />
   <meta name="twitter:card" content="summary_large_image" />
-  <link rel="icon" type="image/svg+xml" href="./lh-mark.svg" />
-  <link rel="preload" href="./fonts/bricolage-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="icon" type="image/svg+xml" href="./lh-favicon.svg" />
   <script>
     (() => {
       const root = document.documentElement;
@@ -27,102 +23,74 @@
       try {
         const saved = localStorage.getItem('portfolio-theme');
         if (saved === 'light' || saved === 'dark') root.dataset.theme = saved;
-        if (sessionStorage.getItem('portfolio-transition') === '1') {
-          if (!matchMedia('(prefers-reduced-motion: reduce)').matches) root.classList.add('page-entering');
+        if (sessionStorage.getItem('portfolio-transition') === '1' && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          const direction = sessionStorage.getItem('portfolio-transition-direction');
+          root.classList.add(direction === 'back' ? 'page-entering-back' : 'page-entering');
           sessionStorage.removeItem('portfolio-transition');
+          sessionStorage.removeItem('portfolio-transition-direction');
         }
-      } catch { /* Storage can be unavailable in private browser contexts. */ }
+      } catch {}
     })();
-  </script>
-  <script type="module" crossorigin src="./assets/main-1cVfrlx-.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/style-pjCJsUrS.css">
-  <link rel="stylesheet" crossorigin href="./assets/about-BGXdoMwL.css">
-</head><body class="page-about"><a class="skip-link" href="#contenido">Saltar al contenido</a>
+  </script>
+  <link rel="stylesheet" href="./src/style.css" />
+  <link rel="stylesheet" href="./src/contact.css" />
+  <link rel="stylesheet" href="./src/about.css" />
+</head>
+<body class="page-about">
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
   <div class="transition-stage" id="transitionStage" aria-hidden="true"><img src="./lh-mark.svg" alt="" /></div>
+
   <header class="site-header">
-    <a class="brand" href="./" aria-label="Luis Hostos — Inicio"><img src="./lh-mark.svg" width="30" height="30" alt="" /><span>LUIS HOSTOS</span></a>
-    <nav class="site-nav" aria-label="Navegación principal"><a href="./projects.html">Proyectos</a><a href="./about.html" aria-current="page">Perfil</a><a href="./index.html#servicios">Servicios</a><a href="./index.html#contacto">Contacto</a></nav>
-    <button class="theme-toggle" type="button" data-theme-toggle data-skip-splash-cursor aria-label="Cambiar a modo oscuro">
-        <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.4"/><path d="M12 2v2.2M12 19.8V22M4.93 4.93l1.55 1.55M17.52 17.52l1.55 1.55M2 12h2.2M19.8 12H22M4.93 19.07l1.55-1.55M17.52 6.48l1.55-1.55"/></svg>
-        <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15.2A8.5 8.5 0 0 1 8.8 4 8.5 8.5 0 1 0 20 15.2Z"/></svg>
-      </button>
-  </header><main class="about-page" id="contenido">
+    <a class="brand" href="./" aria-label="Luis Hostos — Inicio"><img src="./lh-mark.svg" width="30" height="30" alt="" /></a>
+    <nav class="site-nav" aria-label="Navegación principal"><a href="./projects.html">Proyectos</a><a href="./about.html" aria-current="page">Perfil</a><a href="./services.html">Servicios</a><button class="nav-talk" type="button" data-contact-trigger>Hablemos</button></nav>
+    <div class="lang-switch" role="group" aria-label="Idioma"><button type="button" data-lang="es">ES</button><span>/</span><button type="button" data-lang="en">EN</button></div>
+    <button class="theme-toggle" type="button" data-theme-toggle data-skip-splash-cursor aria-label="Cambiar a modo oscuro"><svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.4"/><path d="M12 2v2.2M12 19.8V22M4.93 4.93l1.55 1.55M17.52 17.52l1.55 1.55M2 12h2.2M19.8 12H22M4.93 19.07l1.55-1.55M17.52 6.48l1.55-1.55"/></svg><svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15.2A8.5 8.5 0 0 1 8.8 4 8.5 8.5 0 1 0 20 15.2Z"/></svg></button>
+  </header>
+
+  <main class="about-page" id="contenido">
     <section class="about-hero">
-      <div class="about-title-col">
-        <h1>Mi perfil.</h1>
-      </div>
-
+      <div class="about-title-col"><h1>Mi perfil.</h1></div>
       <div class="about-copy-col">
-        <p>Practicante de Sistemas, egresado de Computación e Informática y estudiante de Ingeniería de Sistemas Computacionales.</p>
-        <p>Desarrollo soluciones web y sistemas internos de negocio: desde el modelado de datos y el control de acceso hasta su publicación y mantenimiento en producción.</p>
-
-        <div class="profile-links"><a class="text-link" href="./LUIS-HOSTOS-CV.pdf" target="_blank" rel="noopener noreferrer">Ver CV (PDF) ↗</a><a class="text-link" href="./index.html#contacto">Contactar →</a></div><div class="education-line" aria-label="Formación académica">
-          <div class="edu-logo-row">
-            <img class="edu-logo" src="./logos/upn.png" alt="Universidad Privada del Norte" />
-            <div><strong>UPN</strong><span>Ingeniería de Sistemas Computacionales · 2025 — Actualidad</span></div>
-          </div>
-          <div class="edu-logo-row">
-            <img class="edu-logo" src="./logos/cibertec.png" alt="CIBERTEC" />
-            <div><strong>CIBERTEC</strong><span>Computación e Informática · 2021 — 2024 · Egresado</span></div>
-          </div>
-        </div>
+        <p>Desarrollo sitios web y sistemas internos, desde la interfaz hasta la publicación.</p>
+        <p class="about-sub">Practicante de Sistemas en NOOVA S.A.C. Egresado de Computación e Informática en CIBERTEC y estudiante de Ingeniería de Sistemas en UPN.</p>
+        <div class="profile-links"><a class="text-link" href="./LUIS-HOSTOS-CV.pdf" target="_blank" rel="noopener noreferrer">Ver CV (PDF) ↗</a><button class="profile-talk" type="button" data-contact-trigger>Hablemos →</button></div>
+        <a class="credentials-launch" href="./credentials.html">
+          <span class="credentials-logos"><span class="logo-plate"><img src="./logos/upn.png" alt="UPN" /></span><span class="logo-plate"><img src="./logos/cibertec.svg" alt="CIBERTEC" /></span></span>
+          <span><strong>Formación y certificaciones</strong><small>UPN · CIBERTEC · Scrum · Idiomas</small></span>
+          <b aria-hidden="true">→</b>
+        </a>
       </div>
     </section>
 
-    <section class="experience" id="experiencia" aria-labelledby="experience-title"><h2 id="experience-title">Experiencia</h2>
-      <article class="experience-row"><div><h3>NOOVA S.A.C.</h3><p>Practicante de Sistemas</p><span>Junio 2026 — Actualidad · Lima, Perú</span></div><div><p>Desarrollé y publiqué la web corporativa con React y TypeScript. Configuré SEO técnico, datos estructurados, dominio y Firebase Hosting.</p><p>Desarrollé flujos de clientes, cotizaciones, ventas y compras en un ERP interno, con permisos por rol, dashboards y generación de documentos PDF.</p><a class="text-link" href="./projects.html#noova">Ver proyectos de NOOVA ↗</a></div></article>
-      <article class="experience-row"><div><h3>Deriva Jurídico</h3><p>Desarrollador Web Freelance</p><span>2025 — 2026 · Lima, Perú</span></div><div><p>Construí una plataforma editorial con panel administrativo, autenticación, roles y gestión de publicaciones y autores.</p><p>Integré Firestore, Storage y metadatos Open Graph por artículo mediante Firebase Functions. Publiqué la solución con dominio propio.</p><a class="text-link" href="./projects.html#deriva">Ver proyecto ↗</a></div></article>
-    </section><section class="tech-matrix" id="stack" aria-label="Tecnologías y herramientas">
-      <div class="tech-column">
-        <h2>Frontend</h2>
-        <div class="tech-items">
-          <span>React</span>
-          <span>TypeScript</span>
-          <span>JavaScript</span>
-          <span>HTML5</span>
-          <span>CSS3</span>
-          <span>Vite</span>
-        </div>
-      </div>
-
-      <div class="tech-column">
-        <h2>Backend / APIs</h2>
-        <div class="tech-items">
-          <span>Java</span>
-          <span>Spring Boot</span>
-          <span>Node.js</span>
-          <span>Python</span>
-          <span>Flask</span>
-          <span>C# / .NET</span>
-          <span>REST / OpenAPI</span>
-          <span>JWT</span>
-        </div>
-      </div>
-
-      <div class="tech-column">
-        <h2>Datos / Cloud</h2>
-        <div class="tech-items">
-          <span>Firebase</span>
-          <span>MySQL</span>
-          <span>SQL Server</span>
-          <span>MongoDB</span>
-          <span>SQLite</span>
-          <span>Supabase</span>
-        </div>
-      </div>
-
-      <div class="tech-column">
-        <h2>Herramientas / QA</h2>
-        <div class="tech-items">
-          <span>Git</span>
-          <span>GitHub</span>
-          <span>Maven</span>
-          <span>Postman</span>
-          <span>Swagger</span>
-          <span>Docker</span>
-          <span>K6</span>
-          <span>JMeter</span>
-        </div>
-      </div>
+    <section class="experience" id="experiencia" aria-labelledby="experience-title">
+      <h2 id="experience-title">Experiencia</h2>
+      <article class="experience-row experience-noova">
+        <div class="experience-company"><span class="company-logo"><img src="./logos/noova.png" alt="NOOVA" /></span><div><h3>NOOVA S.A.C.</h3><p>Practicante de Sistemas</p><span>Junio 2026 — Actualidad · Lima, Perú</span></div></div>
+        <div class="experience-copy"><p>Desarrollé y publiqué la web corporativa con React y TypeScript. Configuré SEO técnico, datos estructurados, dominio y Firebase Hosting.</p><p>Desarrollé flujos de clientes, cotizaciones y compras en un ERP interno, con permisos por rol, dashboards y generación de documentos PDF.</p><p>En desarrollo: la intranet de NOOVA (Noova Learn Mining), una plataforma de formación con registro, acceso por correo o Google y Firebase Authentication.</p><p class="experience-tech">React · TypeScript · Firebase · Vite</p><div class="experience-links"><a class="text-link" href="./projects.html#noova">Web corporativa →</a><a class="text-link" href="./projects.html#erp">ERP interno →</a></div></div>
+      </article>
+      <article class="experience-row experience-deriva">
+        <div class="experience-company"><span class="company-logo"><img src="./logos/deriva.png" alt="Deriva Jurídico" /></span><div><h3>Deriva Jurídico</h3><p>Desarrollador Web Freelance</p><span>2025 — 2026 · Lima, Perú</span></div></div>
+        <div class="experience-copy"><p>Construí una plataforma editorial con panel administrativo, autenticación, roles y gestión de publicaciones y autores.</p><p>Integré Firestore, Storage y metadatos Open Graph por artículo mediante Firebase Functions.</p><p class="experience-tech">JavaScript · Firebase Auth · Firestore · Storage · Functions</p><div class="experience-links"><a class="text-link" href="./projects.html#deriva">Ver proyecto →</a><a class="text-link" href="https://derivajuridico.com/" target="_blank" rel="noopener noreferrer">derivajuridico.com ↗</a></div></div>
+      </article>
     </section>
-  <section class="profile-details"><div><h2>Certificaciones</h2><p>Scrum Fundamentals Certified (SFC) · SCRUMstudy · Julio 2025</p><p>Inglés · Advanced Phase · BRITÁNICO</p></div><div><h2>Idiomas</h2><p>Español nativo · Inglés avanzado · Francés básico</p></div></section></main><footer class="site-footer"><span>Luis Hostos · Lima, Perú</span><nav aria-label="Enlaces profesionales"><a href="./LUIS-HOSTOS-CV.pdf" target="_blank" rel="noopener noreferrer">CV (PDF)</a><a href="https://www.linkedin.com/in/luis-hostos" target="_blank" rel="noopener noreferrer">LinkedIn</a><a href="https://github.com/Luanho11" target="_blank" rel="noopener noreferrer">GitHub</a></nav></footer></body></html>
+
+    <section class="skills" id="stack" aria-labelledby="skills-title">
+      <div class="skills-head"><h2 id="skills-title">Stack</h2></div>
+      <div class="stack-rows">
+        <article class="stack-row"><h3>Frontend</h3><div class="skill-list"><span class="skill"><i><img src="./icons/react.svg" alt="" width="20" height="20" loading="lazy" /></i>React</span><span class="skill"><i><img src="./icons/typescript.svg" alt="" width="20" height="20" loading="lazy" /></i>TypeScript</span><span class="skill"><i><img src="./icons/javascript.svg" alt="" width="20" height="20" loading="lazy" /></i>JavaScript</span><span class="skill"><i><img src="./icons/html5.svg" alt="" width="20" height="20" loading="lazy" /></i>HTML5</span><span class="skill"><i><img src="./icons/css.svg" alt="" width="20" height="20" loading="lazy" /></i>CSS3</span><span class="skill"><i><img src="./icons/vite.svg" alt="" width="20" height="20" loading="lazy" /></i>Vite</span></div><p class="stack-proof"><span>Usado en</span><a href="./projects.html#noova">Web NOOVA</a><a href="./projects.html#erp">ERP NOOVA</a><a href="./projects.html#deriva">Deriva Jurídico</a><a href="./projects.html#auth">Autenticación</a></p></article>
+        <article class="stack-row"><h3>Backend / APIs</h3><div class="skill-list"><span class="skill"><i><img src="./icons/openjdk.svg" alt="" width="20" height="20" loading="lazy" /></i>Java</span><span class="skill"><i><img src="./icons/springboot.svg" alt="" width="20" height="20" loading="lazy" /></i>Spring Boot</span><span class="skill"><i><img src="./icons/nodedotjs.svg" alt="" width="20" height="20" loading="lazy" /></i>Node.js</span><span class="skill"><i><img src="./icons/python.svg" alt="" width="20" height="20" loading="lazy" /></i>Python</span><span class="skill"><i><img src="./icons/flask.svg" alt="" width="20" height="20" loading="lazy" /></i>Flask</span><span class="skill"><i><img src="./icons/dotnet.svg" alt="" width="20" height="20" loading="lazy" /></i>C# / .NET</span></div><p class="stack-proof"><span>Usado en</span><a href="./projects.html#api-hoteles">API Hoteles</a><a href="./projects.html#auth">Autenticación</a><a href="./projects.html#deriva">Deriva Jurídico</a><a href="./projects.html#facial">Reconocimiento facial</a><a href="./projects.html#chatbot">Chatbot académico</a><a href="./projects.html#clinica">Gestión de clínica</a></p></article>
+        <article class="stack-row"><h3>Datos / Cloud</h3><div class="skill-list"><span class="skill"><i><img src="./icons/firebase.svg" alt="" width="20" height="20" loading="lazy" /></i>Firebase</span><span class="skill"><i><img src="./icons/mysql.svg" alt="" width="20" height="20" loading="lazy" /></i>MySQL</span><span class="skill"><i><img src="./icons/sqlite.svg" alt="" width="20" height="20" loading="lazy" /></i>SQLite</span></div><p class="stack-proof"><span>Usado en</span><a href="./projects.html#erp">ERP NOOVA</a><a href="./projects.html#noova">Web NOOVA</a><a href="./projects.html#deriva">Deriva Jurídico</a><a href="./projects.html#api-hoteles">API Hoteles</a><a href="./projects.html#auth">Autenticación</a><a href="./projects.html#facial">Reconocimiento facial</a></p></article>
+        <article class="stack-row"><h3>Herramientas</h3><div class="skill-list"><span class="skill"><i><img src="./icons/git.svg" alt="" width="20" height="20" loading="lazy" /></i>Git</span><span class="skill"><i><img src="./icons/github.svg" alt="" width="20" height="20" loading="lazy" /></i>GitHub</span><span class="skill"><i><img src="./icons/apachemaven.svg" alt="" width="20" height="20" loading="lazy" /></i>Maven</span><span class="skill"><i><img src="./icons/swagger.svg" alt="" width="20" height="20" loading="lazy" /></i>Swagger / OpenAPI</span></div><p class="stack-proof"><span>Usado en</span><a href="./projects.html#api-hoteles">API Hoteles</a><a href="./projects.html#auth">Autenticación</a><a href="https://github.com/Luanho11" target="_blank" rel="noopener noreferrer">Repositorios en GitHub ↗</a></p></article>
+      </div>
+      <p class="stack-more"><span>Otras tecnologías</span>SQL Server · MongoDB · Supabase · Docker · Postman</p>
+    </section>
+
+    <section class="languages" aria-labelledby="languages-title"><h2 id="languages-title">Idiomas</h2><div><p>Español <span>Nativo</span></p><p>Inglés <span>Avanzado</span></p><p>Francés <span>Básico</span></p></div></section>
+  </main>
+
+  <footer class="site-footer"><span>Luis Hostos · Lima, Perú</span><nav aria-label="Enlaces profesionales"><a href="mailto:luis.hostos.hostos@gmail.com">Correo</a><a href="./LUIS-HOSTOS-CV.pdf" target="_blank" rel="noopener noreferrer">CV</a><a href="https://www.linkedin.com/in/luis-hostos" target="_blank" rel="noopener noreferrer">LinkedIn</a><a href="https://github.com/Luanho11" target="_blank" rel="noopener noreferrer">GitHub</a></nav></footer>
+
+  <dialog class="contact-dialog contact-sheet" id="contactDialog" aria-labelledby="contactDialogTitle"><div class="dialog-head"><span>HABLEMOS</span><button type="button" class="dialog-close" data-contact-close aria-label="Cerrar">×</button></div><div class="dialog-body"><h2 id="contactDialogTitle">¿Qué necesitas?</h2><div class="contact-intents"><a class="contact-intent" href="mailto:luis.hostos.hostos@gmail.com?subject=Oportunidad%20laboral"><span><strong>Oportunidad laboral</strong><small>Para empresas y equipos que buscan un desarrollador · Correo</small></span><b aria-hidden="true">↗</b></a><a class="contact-intent" href="https://wa.me/51970465608?text=Hola%20Luis%2C%20quisiera%20consultar%20por%20un%20proyecto%20web." target="_blank" rel="noopener noreferrer"><span><strong>Proyecto web</strong><small>Una web nueva, un catálogo o mejorar tu sitio actual · WhatsApp</small></span><b aria-hidden="true">↗</b></a></div><div class="dialog-email"><span>luis.hostos.hostos@gmail.com</span><button type="button" data-copy-email>Copiar correo</button></div><div class="dialog-channels"><a href="https://www.linkedin.com/in/luis-hostos" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="https://github.com/Luanho11" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="./LUIS-HOSTOS-CV.pdf" target="_blank" rel="noopener noreferrer">CV ↗</a></div></div></dialog>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

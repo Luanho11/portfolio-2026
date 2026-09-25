@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<style>
+  .fg{fill:#111}.accent{fill:#1f5960}
+  @media (prefers-color-scheme: dark){.fg{fill:#fff}.accent{fill:#8fc6c7}}
+</style>
+<path class="fg" d="M7 9h8v37h14v8H7V9Zm27 0h8v16h10V9h8v45h-8V34H42v20h-8V9Z"/>
+<rect class="accent" x="28" y="46" width="5" height="8"/>
+</svg>

@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <base href="/portfolio-2026/" />
   <meta charset="UTF-8" />
+  <base href="/portfolio-2026/" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#f7f7f5" />
   <title>Página no encontrada — Luis Hostos</title>
@@ -19,8 +19,7 @@
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content="Luis Hostos. Desarrollo web y sistemas. Lima, Perú." />
   <meta name="twitter:card" content="summary_large_image" />
-  <link rel="icon" type="image/svg+xml" href="./lh-mark.svg" />
-  <link rel="preload" href="./fonts/bricolage-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="icon" type="image/svg+xml" href="./lh-favicon.svg" />
   <script>
     (() => {
       const root = document.documentElement;
@@ -28,13 +27,15 @@
       try {
         const saved = localStorage.getItem('portfolio-theme');
         if (saved === 'light' || saved === 'dark') root.dataset.theme = saved;
-        if (sessionStorage.getItem('portfolio-transition') === '1') {
-          if (!matchMedia('(prefers-reduced-motion: reduce)').matches) root.classList.add('page-entering');
+        if (sessionStorage.getItem('portfolio-transition') === '1' && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          const direction = sessionStorage.getItem('portfolio-transition-direction');
+          root.classList.add(direction === 'back' ? 'page-entering-back' : 'page-entering');
           sessionStorage.removeItem('portfolio-transition');
+          sessionStorage.removeItem('portfolio-transition-direction');
         }
       } catch { /* Storage can be unavailable in private browser contexts. */ }
     })();
-  </script>
-  <link rel="stylesheet" crossorigin href="./assets/style-pjCJsUrS.css">
-  <link rel="stylesheet" crossorigin href="./assets/about-BGXdoMwL.css">
+  </script>
+  <link rel="stylesheet" href="./src/style.css" />
+  <link rel="stylesheet" href="./src/not-found.css" />
 </head><body><main class="not-found"><h1>Esta página no está aquí.</h1><p>Puedes volver al inicio para explorar mi trabajo o ponerte en contacto.</p><a class="button button-primary" href="/portfolio-2026/">Volver al portfolio →</a></main></body></html>
