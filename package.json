@@ -1,7 +1,7 @@
 {
-  "name": "luis-portfolio-minimal-v17",
+  "name": "luis-hostos-portfolio",
   "private": true,
-  "version": "17.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",

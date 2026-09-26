@@ -27,6 +27,8 @@
       try {
         const saved = localStorage.getItem('portfolio-theme');
         if (saved === 'light' || saved === 'dark') root.dataset.theme = saved;
+        const lang = localStorage.getItem('portfolio-lang');
+        if (lang === 'en' || lang === 'es') root.lang = lang;
         if (sessionStorage.getItem('portfolio-transition') === '1' && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
           const direction = sessionStorage.getItem('portfolio-transition-direction');
           root.classList.add(direction === 'back' ? 'page-entering-back' : 'page-entering');

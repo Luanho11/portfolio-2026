@@ -7,12 +7,12 @@
 .profile-links{display:flex;flex-wrap:wrap;gap:18px 28px;align-items:center;margin-top:34px}
 .profile-talk{min-height:44px;padding:0 18px;border:1px solid var(--ink);background:var(--ink);color:var(--page);font:700 12px/1 var(--sans);transition:background-color 220ms var(--ease),color 220ms var(--ease)}
 .profile-talk:hover{background:transparent;color:var(--ink)}
-.credentials-launch{margin-top:54px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:22px;min-height:112px;padding:18px 20px;border-radius:16px;background:var(--page-alt);color:var(--ink);text-decoration:none;transition:background-color 360ms var(--ease),box-shadow 520ms var(--ease)}
-.credentials-launch:hover,.credentials-launch:focus-visible{background:color-mix(in srgb,var(--page-alt) 70%,var(--accent) 8%);box-shadow:0 22px 55px color-mix(in srgb,var(--ink) 9%,transparent)}
-.credentials-logos{display:flex;align-items:center;margin-right:2px}
-.logo-plate{width:64px;height:64px;display:grid;place-items:center;border-radius:50%;background:var(--page);box-shadow:0 8px 28px color-mix(in srgb,var(--ink) 7%,transparent)}
-.logo-plate+ .logo-plate{margin-left:-14px}
-.logo-plate img{display:block;max-width:48px;max-height:42px;object-fit:contain}
+.credentials-launch{margin-top:54px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:22px;min-height:112px;padding:18px 20px;border-radius:16px;background:var(--page-alt);color:var(--ink);text-decoration:none;transition:background-color 360ms var(--ease)}
+.credentials-launch:hover,.credentials-launch:focus-visible{background:color-mix(in srgb,var(--page-alt) 82%,var(--accent) 10%)}
+.credentials-logos{display:flex;align-items:center;gap:8px;margin-right:2px}
+.logo-plate{width:60px;height:60px;display:grid;place-items:center;border-radius:16px;background:#fff}
+.logo-plate img{display:block;width:auto;height:58%;max-width:70%;object-fit:contain}
+.logo-plate--wide img{width:78%;height:auto;max-height:70%}
 .credentials-launch>span:nth-child(2){display:flex;flex-direction:column;gap:4px}
 .credentials-launch strong{font-family:var(--display);font-size:17px;letter-spacing:-.02em}
 .credentials-launch small{color:var(--muted);font-size:11px}
@@ -23,14 +23,12 @@
 .experience>h2,.skills>h2,.languages>h2{margin:0 0 34px;font-family:var(--display);font-size:clamp(2.2rem,4.2vw,4.4rem);font-weight:560;letter-spacing:-.043em;line-height:.95}
 .experience-row{position:relative;display:grid;grid-template-columns:minmax(330px,.85fr) 1.15fr;gap:clamp(42px,8vw,126px);padding:42px clamp(28px,4vw,54px);border-radius:22px;overflow:hidden;background:var(--page-alt);isolation:isolate}
 .experience-row+ .experience-row{margin-top:24px}
-.experience-row::before{content:"";position:absolute;inset:auto -12% -52% auto;width:420px;height:420px;border-radius:50%;background:color-mix(in srgb,var(--accent) 8%,transparent);z-index:-1;filter:blur(1px)}
-.experience-deriva::before{inset:-64% auto auto -15%;background:color-mix(in srgb,var(--blue) 6%,transparent)}
 .experience-company{display:flex;align-items:flex-start;gap:22px}
-.company-logo{width:92px;height:92px;flex:0 0 auto;display:grid;place-items:center}
-.company-logo img{display:block;width:100%;height:100%;object-fit:contain}
-html[data-theme="dark"] .company-logo{border-radius:50%;background:#fff}
-/* Dentro del círculo el logo se reduce lo justo para que sus esquinas no toquen el borde. */
-html[data-theme="dark"] .company-logo img{width:76%;height:76%}
+/* Isotipo en una placa blanca del mismo tamaño en ambos temas: centrado y con margen. */
+.company-logo{width:72px;height:72px;flex:0 0 auto;display:grid;place-items:center;border-radius:18px;background:#fff}
+.company-logo img{display:block;width:44px;height:auto}
+.company-logo--tall img{width:auto;height:42px}
+html[data-theme="dark"] .company-logo{box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
 .experience-company h3{margin:4px 0 3px;font-family:var(--display);font-size:clamp(1.55rem,2.2vw,2.2rem);letter-spacing:-.035em;line-height:1}
 .experience-company p{margin:0 0 5px;font-size:12px;font-weight:700}
 .experience-company span{font-size:11px;color:var(--muted)}
@@ -43,12 +41,10 @@ html[data-theme="dark"] .company-logo img{width:76%;height:76%}
 .skill-group{min-width:0;padding:28px 0}
 .skill-group h3{margin:0 0 24px;font-family:var(--display);font-size:clamp(1.35rem,2.1vw,2rem);font-weight:560;letter-spacing:-.03em}
 .skill-list{display:flex;flex-wrap:wrap;gap:13px 18px}
-.skill{display:inline-flex;align-items:center;gap:9px;min-height:34px;color:var(--muted);font-size:12px;font-weight:650;transition:color 220ms var(--ease)}
-.skill:hover{color:var(--ink)}
+.skill{display:inline-flex;align-items:center;gap:9px;min-height:34px;color:var(--ink);font-size:13px;font-weight:600}
 .skill i{position:relative;width:24px;height:24px;display:grid;place-items:center;flex:0 0 auto;font-style:normal}
-.skill i img{position:absolute;inset:2px;width:20px;height:20px;object-fit:contain;filter:grayscale(1) contrast(.9);opacity:.78;transition:filter 300ms var(--ease),opacity 300ms var(--ease)}
+.skill i img{position:absolute;inset:2px;width:20px;height:20px;object-fit:contain}
 .skill i b{font-size:8px;font-weight:800;color:var(--muted);opacity:.45}
-.skill:hover i img{filter:none;opacity:1}
 
 .languages{display:grid;grid-template-columns:.7fr 1.3fr;gap:60px;padding:40px 0 26px}
 .languages>h2{margin-bottom:0}
@@ -73,19 +69,17 @@ html[data-theme="dark"] .company-logo img{width:76%;height:76%}
   .profile-links{margin-top:25px}
   .credentials-launch{grid-template-columns:auto 1fr;padding:15px;gap:14px;min-height:96px}
   .credentials-launch>b{display:none}
-  .logo-plate{width:50px;height:50px}.logo-plate img{max-width:38px;max-height:34px}
+  .logo-plate{width:50px;height:50px;border-radius:13px}
   .credentials-launch strong{font-size:15px}.credentials-launch small{font-size:10px}
   .experience{padding:50px 0 64px}
   .experience-row{padding:26px 22px;border-radius:16px}
-  .experience-company{gap:15px}.company-logo{width:72px;height:72px}
+  .experience-company{gap:15px}.company-logo{width:60px;height:60px;border-radius:15px}.company-logo img{width:36px}.company-logo--tall img{width:auto;height:36px}
   .experience-copy p{font-size:13px}
   .skills{padding-bottom:64px}
   .skill-groups{grid-template-columns:1fr;gap:0}
   .skill-group{padding:20px 0}
   .languages>div{grid-template-columns:1fr;gap:16px}
 }
-.logo-plate{background:#f7f7f5}
-.logo-plate:nth-child(2) img{max-width:54px;max-height:19px}
 
 /* ---------- Perfil: resumen, experiencia con stack y stack ligado a proyectos ---------- */
 .about-copy-col>p.about-sub{max-width:52ch;margin-top:20px;font:400 15px/1.7 var(--sans);letter-spacing:0;color:var(--muted)}
@@ -96,13 +90,13 @@ html[data-theme="dark"] .company-logo img{width:76%;height:76%}
 .skills-head{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:34px}
 .skills-head h2{margin:0!important}
 .skills-head p{margin:0;color:var(--muted);font-size:13px}
-.stack-rows{border-top:1px solid var(--line)}
-.stack-row{display:grid;grid-template-columns:minmax(150px,.5fr) minmax(0,1.3fr) minmax(0,1fr);gap:18px 40px;align-items:start;padding:26px 0;border-bottom:1px solid var(--line)}
+.stack-rows{display:grid;gap:10px}
+.stack-row{display:grid;grid-template-columns:minmax(150px,.5fr) minmax(0,1.3fr) minmax(0,1fr);gap:18px 40px;align-items:start;padding:24px 0}
 .stack-row h3{margin:4px 0 0;font:560 1.35rem/1.1 var(--display);letter-spacing:-.03em}
 .stack-row .skill-list{gap:10px 18px}
 .skill i img{inset:2px;width:20px;height:20px}
-html[data-theme="dark"] .skill i img{filter:grayscale(1) brightness(0) invert(1);opacity:.62}
-html[data-theme="dark"] .skill:hover i img{opacity:1}
+/* Los iconos van a color; los que son negros por marca se aclaran en modo oscuro para no perderse. */
+html[data-theme="dark"] .skill i img.icon-mono{filter:invert(1)}
 .stack-proof{display:flex;flex-wrap:wrap;align-items:center;gap:2px 14px;margin:0;font-size:12px;line-height:1.5}
 .stack-proof span{width:100%;font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .stack-proof a{display:inline-flex;align-items:center;min-height:32px;font-weight:650;text-underline-offset:4px}

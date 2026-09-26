@@ -1,4 +1,4 @@
-/* Proyectos — reel de paneles con expansión fluida al detalle. */
+/* Proyectos — paneles verticales con expansión fluida al detalle. */
 import Lenis from 'lenis';
 
 const root = document.documentElement;
@@ -12,19 +12,36 @@ const hero = document.getElementById('detailHero');
 const heroImg = document.getElementById('detailImage');
 const backButton = document.getElementById('detailBack');
 const moreButton = document.getElementById('detailMore');
-const shotsBox = document.getElementById('galleryShots');
+const nextButton = document.getElementById('detailNext');
 const el = (id) => document.getElementById(id);
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 const compact = matchMedia('(max-width: 720px)');
-const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
+const canHover = matchMedia('(hover: hover) and (pointer: fine)');
 
 const UI = {
-  es: { back: 'Proyectos', more: 'Ver detalles', gallery: 'Capturas', next: 'Siguiente proyecto', wins: 'Qué construí', ctaTitle: '¿Necesitas algo similar para tu empresa?', ctaButton: 'Escríbeme por WhatsApp', context: 'Contexto', role: 'Mi rol', stack: 'Stack', heading: 'Proyectos', lead: 'Sitios publicados, sistemas internos y proyectos académicos: del diseño a producción.', hint: 'Pasa el cursor para explorar', open: 'Clic para abrir', work: 'Profesionales', academic: 'Académicos', zoom: 'Ampliar imagen' },
-  en: { back: 'Projects', more: 'View details', gallery: 'Screenshots', next: 'Next project', wins: 'What I built', ctaTitle: 'Need something similar for your business?', ctaButton: 'Message me on WhatsApp', context: 'Context', role: 'My role', stack: 'Stack', heading: 'Projects', lead: 'Published websites, internal systems and academic projects: from design to production.', hint: 'Hover to explore', open: 'Click to open', work: 'Professional', academic: 'Academic', zoom: 'Enlarge image' },
+  es: {
+    back: 'Proyectos', more: 'Ver detalles', gallery: 'Capturas', next: 'Siguiente proyecto', wins: 'Qué construí',
+    ctaTitle: '¿Necesitas algo similar para tu empresa?', ctaButton: 'Escríbeme por WhatsApp', context: 'Contexto', role: 'Mi rol', stack: 'Stack',
+    heading: 'Proyectos', lead: 'Sitios publicados, sistemas internos y proyectos académicos: del diseño a producción.',
+    work: 'Profesionales', academic: 'Académicos', zoom: 'Ampliar', prev: 'Captura anterior', nextShot: 'Captura siguiente',
+    idleKicker: '3 profesionales · 5 académicos', idleTitle: 'Elige un proyecto',
+    idleDesc: 'Los profesionales están publicados y en uso; los académicos incluyen su repositorio.',
+    idleHintHover: 'Pasa el cursor por los paneles', idleHintTouch: 'Desliza para ver más →',
+    open: 'Clic para ver el proyecto →', openTouch: 'Toca para ver el proyecto →',
+  },
+  en: {
+    back: 'Projects', more: 'View details', gallery: 'Screenshots', next: 'Next project', wins: 'What I built',
+    ctaTitle: 'Need something similar for your business?', ctaButton: 'Message me on WhatsApp', context: 'Context', role: 'My role', stack: 'Stack',
+    heading: 'Projects', lead: 'Published websites, internal systems and academic projects: from design to production.',
+    work: 'Professional', academic: 'Academic', zoom: 'Enlarge', prev: 'Previous screenshot', nextShot: 'Next screenshot',
+    idleKicker: '3 professional · 5 academic', idleTitle: 'Pick a project',
+    idleDesc: 'Professional projects are live and in use; academic ones include their repository.',
+    idleHintHover: 'Hover over the panels', idleHintTouch: 'Swipe to see more →',
+    open: 'Click to view the project →', openTouch: 'Tap to view the project →',
+  },
 };
 // Curva suave al inicio y al final; duración corta para llegar rápido al contenido.
 const MORPH = { duration: 760, easing: 'cubic-bezier(.65,0,.2,1)', fill: 'both' };
-const HOT_SCALE = 1.08;
 
 let hot = -1;
 let current = -1;
@@ -34,12 +51,11 @@ let leaveTimer;
 let closeQueued = false;
 
 const lang = () => (root.lang === 'en' ? 'en' : 'es');
-const pad = (n) => String(n).padStart(2, '0');
+const t = (key) => UI[lang()][key];
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
-const lerp = (a, b, t) => a + (b - a) * t;
 const text = (card, key) => card.dataset[key + (lang() === 'en' ? 'En' : 'Es')] || card.dataset[`${key}Es`] || '';
+const list = (value) => (value || '').split('|').map((s) => s.trim()).filter(Boolean);
 const nextFrame = () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-const localSources = (card) => (card.dataset.gallery || '').split('|').map((s) => s.trim()).filter((s) => s.startsWith('./'));
 
 /* ---------- Scroll suave del detalle ---------- */
 const lenis = new Lenis({
@@ -51,46 +67,44 @@ const lenis = new Lenis({
   autoRaf: false,
 });
 lenis.stop();
+function raf(time) {
+  lenis.raf(time);
+  requestAnimationFrame(raf);
+}
+requestAnimationFrame(raf);
 
-/* ---------- Textos / idioma ---------- */
-const ticks = cards.map(() => {
-  const li = document.createElement('li');
-  el('reelTicks').append(li);
-  return li;
-});
-el('reelTotal').textContent = pad(cards.length);
-cards.forEach((card, i) => {
-  const num = document.createElement('span');
-  num.className = 'reel-card__num';
-  num.textContent = pad(i + 1);
-  num.setAttribute('aria-hidden', 'true');
+/* ---------- Categoría dentro de cada panel ---------- */
+cards.forEach((card) => {
   const kicker = document.createElement('span');
   kicker.className = 'reel-card__kicker';
   kicker.setAttribute('aria-hidden', 'true');
-  card.append(num, kicker);
+  card.append(kicker);
 });
 
-/* Barra inferior: muestra el proyecto bajo el cursor */
+/* ---------- Ficha inferior: describe el proyecto bajo el cursor ---------- */
+// Categoría + empresa/tipo y año, sin el cargo (que ya aparece en el detalle).
+const infoKicker = (card) => [text(card, 'kicker'), ...text(card, 'context').split(' · ').filter((part) => !/practicante|intern/i.test(part))]
+  .filter(Boolean).join(' · ');
 let infoIndex = null;
 function renderInfo(index, animate = true) {
   const changed = infoIndex !== index;
   infoIndex = index;
   const card = cards[index];
+  const touch = !canHover.matches || compact.matches;
   const apply = () => {
-    el('infoNum').textContent = card ? pad(index + 1) : '—';
-    el('infoTitle').textContent = card ? text(card, 'title') : UI[lang()].hint;
-    el('infoKicker').textContent = card ? text(card, 'kicker') : '';
-    el('infoTech').textContent = card ? card.dataset.tech : UI[lang()].open;
+    el('infoKicker').textContent = card ? infoKicker(card) : t('idleKicker');
+    el('infoTitle').textContent = card ? text(card, 'title') : t('idleTitle');
+    el('infoDesc').textContent = card ? text(card, 'desc') : t('idleDesc');
+    el('infoTech').textContent = card ? card.dataset.tech : '';
+    el('infoHint').textContent = card ? t(touch ? 'openTouch' : 'open') : t(touch ? 'idleHintTouch' : 'idleHintHover');
   };
-  ticks.forEach((tick, i) => tick.classList.toggle('is-on', i === index));
-  const now = el('infoTitle').parentElement;
+  const box = document.querySelector('.reel-info');
   if (!animate || !changed || reduced.matches) { apply(); return; }
-  now.getAnimations().forEach((a) => a.cancel());
-  now.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(6px)' }], { duration: 160, easing: 'ease-in' })
-    .finished.then(() => {
-      apply();
-      now.animate([{ opacity: 0, transform: 'translateY(-6px)' }, { opacity: 1, transform: 'none' }], { duration: 420, easing: 'cubic-bezier(.16,1,.3,1)' });
-    }).catch(() => {});
+  box.getAnimations().forEach((a) => a.cancel());
+  box.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 140, easing: 'ease-in' }).finished.then(() => {
+    apply();
+    box.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 320, easing: 'ease-out' });
+  }).catch(() => {});
 }
 
 function renderCopy() {
@@ -99,26 +113,18 @@ function renderCopy() {
     card.querySelector('.reel-card__label').innerHTML = text(card, 'label') || text(card, 'title');
     card.setAttribute('aria-label', `${text(card, 'title')} — ${text(card, 'kicker')}`);
   });
-  document.querySelectorAll('[data-ui]').forEach((node) => { node.textContent = UI[lang()][node.dataset.ui]; });
+  document.querySelectorAll('[data-ui]').forEach((node) => { node.textContent = t(node.dataset.ui); });
+  el('shotsPrev').setAttribute('aria-label', t('prev'));
+  el('shotsNext').setAttribute('aria-label', t('nextShot'));
   if (current >= 0) fillDetail(current, { rebuildGallery: false });
   renderInfo(infoIndex ?? -1, false);
 }
 
-/* Si una imagen remota falla, usa una captura local del mismo proyecto. */
-cards.forEach((card) => {
-  const img = card.querySelector('img');
-  img.addEventListener('error', () => {
-    const fallback = localSources(card).find((src) => !img.src.endsWith(src.slice(1)));
-    if (fallback && !img.dataset.fellBack) { img.dataset.fellBack = '1'; img.src = fallback; }
-    else card.classList.add('is-broken');
-  });
-});
-
 // Los paneles se revelan cuando sus imágenes ya cargaron, así la animación no muestra cajas vacías.
-const cardImages = cards.map((card) => card.querySelector('img').decode().catch(() => {}));
+const cardImages = cards.map((card) => card.querySelector('img').decode().catch(() => card.classList.add('is-broken')));
 Promise.race([Promise.all(cardImages), wait(2500)]).then(() => rack.classList.add('is-ready'));
 
-/* ---------- Hover / foco (acordeón estable, sin carrusel) ---------- */
+/* ---------- Hover / foco (acordeón estable) ---------- */
 function setHot(index) {
   if (hot === index) return;
   hot = index;
@@ -140,9 +146,6 @@ cards.forEach((card, i) => {
     clearTimeout(leaveTimer);
     leaveTimer = setTimeout(() => { if (!isOpen) setHot(-1); }, 160);
   });
-});
-
-cards.forEach((card, i) => {
   card.addEventListener('focus', () => { if (!isOpen && card.matches(':focus-visible')) setHot(i); });
   card.addEventListener('click', () => openProject(i));
   card.addEventListener('keydown', (event) => {
@@ -153,102 +156,154 @@ cards.forEach((card, i) => {
   });
 });
 
-/* ---------- Movimiento de imágenes (se interpola cada frame) ---------- */
-const pointer = { cx: 0, cy: 0 };
-const pans = cards.map(() => ({ x: 0, y: 0, tx: 0, ty: 0 }));
-
-window.addEventListener('pointermove', (event) => {
-  if (event.pointerType === 'touch') return;
-  pointer.cx = event.clientX;
-  pointer.cy = event.clientY;
+/* En móvil (sin cursor) la ficha describe el panel más visible del carrusel horizontal. */
+let scrollTimer;
+rack.addEventListener('scroll', () => {
+  if (!compact.matches || isOpen) return;
+  clearTimeout(scrollTimer);
+  scrollTimer = setTimeout(() => {
+    const box = rack.getBoundingClientRect();
+    const anchor = box.left + box.width * 0.3;
+    let best = -1;
+    let bestDist = Infinity;
+    cards.forEach((card, i) => {
+      const r = card.getBoundingClientRect();
+      const dist = Math.abs(r.left + r.width / 2 - anchor);
+      if (dist < bestDist) { bestDist = dist; best = i; }
+    });
+    renderInfo(rack.scrollLeft < 8 ? -1 : best);
+  }, 90);
 }, { passive: true });
 
-function updatePans() {
-  const active = !isOpen && finePointer.matches && !reduced.matches && !compact.matches;
-  cards.forEach((card, i) => {
-    const pan = pans[i];
-    if (active && i === hot) {
-      const r = card.getBoundingClientRect();
-      const nx = Math.max(-0.5, Math.min(0.5, (pointer.cx - (r.left + r.width / 2)) / r.width));
-      const ny = Math.max(-0.5, Math.min(0.5, (pointer.cy - (r.top + r.height / 2)) / r.height));
-      // Nunca más de lo que cubre el zoom: la imagen no deja bordes vacíos.
-      pan.tx = -nx * r.width * (HOT_SCALE - 1) * 0.9;
-      pan.ty = -ny * r.height * (HOT_SCALE - 1) * 0.9;
-    } else { pan.tx = 0; pan.ty = 0; }
-    pan.x = lerp(pan.x, pan.tx, 0.07);
-    pan.y = lerp(pan.y, pan.ty, 0.07);
-    if (Math.abs(pan.x) < 0.05 && Math.abs(pan.y) < 0.05 && !pan.tx && !pan.ty) { pan.x = 0; pan.y = 0; }
-    card.style.setProperty('--pan-x', `${pan.x.toFixed(2)}px`);
-    card.style.setProperty('--pan-y', `${pan.y.toFixed(2)}px`);
-  });
-}
-
-function updateDetailMotion() {
-  if (!isOpen) return;
-  const still = reduced.matches;
-  const scroll = lenis.animatedScroll || detail.scrollTop;
-
-  // Hero: la imagen baja más lento que el marco (parallax) sin dejar huecos.
-  const heroH = hero.offsetHeight || 1;
-  const shift = still ? 0 : Math.min(scroll, heroH) * 0.12;
-  heroImg.style.translate = `0 ${shift.toFixed(1)}px`;
-  heroImg.style.scale = String(1 + (2 * shift) / heroH);
-}
-
-function tick(time) {
-  lenis.raf(time);
-  updatePans();
-  updateDetailMotion();
-  requestAnimationFrame(tick);
-}
-requestAnimationFrame(tick);
-
-/* ---------- Detalle ---------- */
+/* ---------- Carrusel de capturas ---------- */
 const zoom = el('reelZoom');
 const zoomImg = el('reelZoomImg');
 zoom.addEventListener('click', () => zoom.close());
-let shotObserver;
+const track = el('shotsTrack');
+const thumbs = el('shotsThumbs');
+const shots = { index: 0, sources: [], captions: [] };
+const isPhoneShot = (src) => /(movil|mobile)/i.test(src);
 
 function buildGallery(card) {
-  const sources = card.dataset.gallery.split('|').map((s) => s.trim()).filter(Boolean);
-  shotObserver?.disconnect();
-  shotObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) { entry.target.classList.add('is-in'); shotObserver.unobserve(entry.target); }
-    });
-  }, { root: detail, threshold: 0.1 });
+  shots.sources = list(card.dataset.gallery);
+  shots.captions = list(text(card, 'captions'));
+  shots.index = 0;
+  const single = shots.sources.length < 2;
+  el('shots').classList.toggle('is-single', single);
 
-  shotsBox.replaceChildren(...sources.map((src) => {
-    const fig = document.createElement('figure');
-    fig.className = 'reel-shot';
+  track.replaceChildren(...shots.sources.map((src, i) => {
+    const li = document.createElement('li');
+    li.className = `shot${isPhoneShot(src) ? ' shot--phone' : ''}`;
+    li.setAttribute('aria-roledescription', 'slide');
     const button = document.createElement('button');
     button.type = 'button';
-    button.setAttribute('aria-label', UI[lang()].zoom);
+    button.className = 'shot__zoom';
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = shots.captions[i] || '';
+    img.decoding = 'async';
+    if (i > 1) img.loading = 'lazy';
+    // Capturas altas de código: se muestran desde arriba llenando el marco; se amplían al hacer clic.
+    img.addEventListener('load', () => {
+      if (!isPhoneShot(src) && img.naturalWidth / img.naturalHeight < 1.25) li.classList.add('shot--tall');
+    });
+    button.addEventListener('click', () => {
+      if (dragMoved) return;
+      zoomImg.src = src;
+      zoomImg.alt = img.alt;
+      zoom.showModal();
+    });
+    button.append(img);
+    li.append(button);
+    return li;
+  }));
+
+  thumbs.replaceChildren(...shots.sources.map((src, i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = `shots__thumb${isPhoneShot(src) ? ' is-phone' : ''}`;
+    b.setAttribute('aria-label', shots.captions[i] || `${i + 1}`);
     const img = document.createElement('img');
     img.src = src;
     img.alt = '';
     img.loading = 'lazy';
-    img.decoding = 'async';
-    // Las capturas anchas ocupan toda la fila; las verticales o cuadradas van de a dos.
-    img.addEventListener('load', () => fig.classList.toggle('is-wide', img.naturalWidth / img.naturalHeight >= 1.6));
-    img.addEventListener('error', () => fig.remove());
-    button.addEventListener('click', () => {
-      zoomImg.src = src;
-      zoom.showModal();
-    });
-    button.append(img);
-    fig.append(button);
-    shotObserver.observe(fig);
-    return fig;
+    b.append(img);
+    b.addEventListener('click', () => showShot(i));
+    return b;
   }));
+  showShot(0, { instant: true });
 }
 
+function showShot(index, { instant = false } = {}) {
+  const n = shots.sources.length;
+  if (!n) return;
+  shots.index = (index + n) % n;
+  track.style.transition = instant || reduced.matches ? 'none' : '';
+  track.style.transform = `translate3d(${-shots.index * 100}%,0,0)`;
+  [...track.children].forEach((li, i) => {
+    li.inert = i !== shots.index;
+    li.querySelector('button').setAttribute('aria-label', `${t('zoom')}: ${shots.captions[i] || ''}`);
+  });
+  [...thumbs.children].forEach((b, i) => b.setAttribute('aria-current', String(i === shots.index)));
+  el('shotsCount').textContent = `${String(shots.index + 1).padStart(2, '0')} / ${String(n).padStart(2, '0')}`;
+  el('shotsCaption').textContent = shots.captions[shots.index] || '';
+  thumbs.children[shots.index]?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+}
+
+el('shotsPrev').addEventListener('click', () => showShot(shots.index - 1));
+el('shotsNext').addEventListener('click', () => showShot(shots.index + 1));
+el('shots').addEventListener('keydown', (event) => {
+  if (event.key === 'ArrowLeft') { event.preventDefault(); showShot(shots.index - 1); }
+  if (event.key === 'ArrowRight') { event.preventDefault(); showShot(shots.index + 1); }
+});
+
+/* Arrastre con el dedo o el mouse y desplazamiento horizontal del trackpad. */
+let drag = null;
+let dragMoved = false;
+const stageEl = document.querySelector('.shots__stage');
+stageEl.addEventListener('pointerdown', (event) => {
+  if (event.button !== 0 || event.target.closest('.shots__arrow')) return;
+  drag = { id: event.pointerId, x: event.clientX, y: event.clientY, width: stageEl.offsetWidth };
+  dragMoved = false;
+});
+stageEl.addEventListener('pointermove', (event) => {
+  if (!drag || event.pointerId !== drag.id) return;
+  const dx = event.clientX - drag.x;
+  if (!dragMoved && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(event.clientY - drag.y)) {
+    dragMoved = true;
+    track.style.transition = 'none';
+  }
+  if (dragMoved) track.style.transform = `translate3d(calc(${-shots.index * 100}% + ${dx}px),0,0)`;
+});
+const endDrag = (event) => {
+  if (!drag || event.pointerId !== drag.id) return;
+  const dx = event.clientX - drag.x;
+  const width = drag.width;
+  drag = null;
+  if (!dragMoved) return;
+  track.style.transition = '';
+  if (Math.abs(dx) > width * 0.15) showShot(shots.index + (dx < 0 ? 1 : -1));
+  else showShot(shots.index);
+  setTimeout(() => { dragMoved = false; }, 60);
+};
+stageEl.addEventListener('pointerup', endDrag);
+stageEl.addEventListener('pointercancel', endDrag);
+let wheelLock = 0;
+stageEl.addEventListener('wheel', (event) => {
+  if (Math.abs(event.deltaX) < Math.abs(event.deltaY) || Math.abs(event.deltaX) < 20) return;
+  event.preventDefault();
+  event.stopPropagation();
+  const now = performance.now();
+  if (now < wheelLock) return;
+  wheelLock = now + 600;
+  showShot(shots.index + (event.deltaX > 0 ? 1 : -1));
+}, { passive: false });
+
+/* ---------- Detalle ---------- */
 function fillDetail(index, { rebuildGallery = true } = {}) {
   const card = cards[index];
   el('detailKicker').textContent = text(card, 'kicker');
   el('detailTitle').textContent = text(card, 'title');
-  el('detailIndex').textContent = pad(index + 1);
-  el('detailCount').textContent = `${pad(index + 1)} / ${pad(cards.length)}`;
   el('detailDescription').textContent = text(card, 'desc');
   el('detailStack').textContent = card.dataset.tech || '';
   el('detailContext').textContent = text(card, 'context');
@@ -261,8 +316,7 @@ function fillDetail(index, { rebuildGallery = true } = {}) {
     ? `Hi Luis, I saw the ${text(card, 'title')} project in your portfolio and would like information about a similar project.`
     : `Hola Luis, vi el proyecto ${text(card, 'title')} en tu portfolio y quisiera información para un proyecto similar.`;
   el('detailWhatsapp').href = `https://wa.me/51970465608?text=${encodeURIComponent(message)}`;
-  const wins = text(card, 'wins').split('|').filter(Boolean);
-  el('detailWins').replaceChildren(...wins.map((win) => { const li = document.createElement('li'); li.textContent = win; return li; }));
+  el('detailWins').replaceChildren(...list(text(card, 'wins')).map((win) => { const li = document.createElement('li'); li.textContent = win; return li; }));
   heroImg.alt = text(card, 'title');
   const href = card.dataset.href || '';
   const link = el('detailLink');
@@ -270,7 +324,14 @@ function fillDetail(index, { rebuildGallery = true } = {}) {
   el('detailPrivate').hidden = Boolean(href);
   if (href) { link.href = href; el('detailCta').textContent = text(card, 'cta'); }
   else el('detailPrivateText').textContent = text(card, 'cta');
+  el('nextTitle').textContent = text(cards[(index + 1) % cards.length], 'title');
   if (rebuildGallery) buildGallery(card);
+  else {
+    shots.captions = list(text(card, 'captions'));
+    [...thumbs.children].forEach((b, i) => b.setAttribute('aria-label', shots.captions[i] || `${i + 1}`));
+    [...track.children].forEach((li, i) => { li.querySelector('img').alt = shots.captions[i] || ''; });
+    showShot(shots.index, { instant: true });
+  }
 }
 
 function setDistances(index) {
@@ -288,11 +349,6 @@ function settleRack(index) {
 async function loadHero(src) {
   if (heroImg.getAttribute('src') !== src) heroImg.src = src;
   try { await heroImg.decode(); } catch { /* Una imagen rota no bloquea la animación. */ }
-}
-
-function resetHeroMotion() {
-  heroImg.style.translate = '';
-  heroImg.style.scale = '';
 }
 
 /* Geometría para que el panel y el hero coincidan píxel a píxel. */
@@ -329,7 +385,6 @@ function clearMorph() {
 }
 async function runMorph(card, direction, duration = MORPH.duration) {
   clearMorph();
-  resetHeroMotion();
   const f = morphFrames(card);
   const opening = direction === 'open';
   hero.style.overflow = 'visible';
@@ -344,8 +399,8 @@ async function runMorph(card, direction, duration = MORPH.duration) {
 }
 
 /* Los paneles destacados usan una captura vertical y el detalle la versión de escritorio:
-   una copia del panel se desvanece sobre la expansión para que el cambio de imagen no salte. */
-/* En móvil el hero es vertical: se usa la misma captura del panel (móvil) en lugar de la de escritorio. */
+   una copia del panel se desvanece sobre la expansión para que el cambio de imagen no salte.
+   En móvil el hero es vertical: se usa la misma captura del panel. */
 const usesOwnHero = (card) => Boolean(card.dataset.hero) && !compact.matches;
 const heroSource = (card) => {
   const img = card.querySelector('img');
@@ -359,8 +414,7 @@ function fadePanelImage(card) {
   const ghost = img.cloneNode();
   Object.assign(ghost.style, {
     position: 'fixed', left: `${r.left}px`, top: `${r.top}px`, width: `${r.width}px`, height: `${r.height}px`,
-    margin: '0', objectFit: 'cover', objectPosition: getComputedStyle(img).objectPosition,
-    transform: 'none', translate: 'none', zIndex: '8', pointerEvents: 'none',
+    margin: '0', objectFit: 'cover', objectPosition: getComputedStyle(img).objectPosition, zIndex: '8', pointerEvents: 'none',
   });
   ghost.setAttribute('aria-hidden', 'true');
   document.body.append(ghost);
@@ -373,7 +427,6 @@ async function openProject(index, { instant = false } = {}) {
   busy = true;
   clearTimeout(leaveTimer);
   const card = cards[index];
-  const img = card.querySelector('img');
   current = index;
 
   fillDetail(index);
@@ -420,7 +473,7 @@ function scrollDetailTop() {
   return new Promise((resolve) => {
     lenis.scrollTo(0, {
       duration: Math.min(0.6, 0.3 + start / 3000),
-      easing: (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2),
+      easing: (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2),
       force: true,
       lock: true,
       onComplete: resolve,
@@ -457,7 +510,6 @@ async function closeProject() {
   detail.classList.remove('is-open');
   clearMorph();
   heroFade?.cancel();
-  resetHeroMotion();
   detail.inert = true;
   rack.inert = false;
   history.replaceState(null, '', location.pathname + location.search);
@@ -483,21 +535,14 @@ async function switchProject(index) {
     await heroImg.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 240, easing: 'ease', fill: 'forwards' }).finished.catch(() => {});
   }
   current = index;
-  const img = card.querySelector('img');
   await loadHero(heroSource(card));
   fillDetail(index);
-  rack.classList.add('is-frozen');
   oldCard.classList.remove('is-source');
   card.classList.add('is-source');
   setDistances(index);
   settleRack(index);
   heroImg.getAnimations().forEach((a) => a.cancel());
-  if (!reduced.matches) {
-    heroImg.animate(
-      [{ opacity: 0, transform: 'scale(1.06)' }, { opacity: 1, transform: 'scale(1)' }],
-      { duration: 700, easing: 'cubic-bezier(.22,1,.36,1)' },
-    );
-  }
+  if (!reduced.matches) heroImg.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 500, easing: 'ease-out' });
   history.replaceState(null, '', `#${card.dataset.id}`);
   await nextFrame();
   detail.classList.add('is-revealed');
@@ -510,12 +555,21 @@ backButton.addEventListener('click', closeProject);
 moreButton.addEventListener('click', () => {
   lenis.scrollTo(el('detailAbout'), { offset: -24, duration: reduced.matches ? 0 : 0.9 });
 });
+nextButton.addEventListener('click', () => switchProject((current + 1) % cards.length));
 
 window.addEventListener('keydown', (event) => {
   if (event.key !== 'Escape' || !isOpen) return;
   if (document.querySelector('dialog[open]')) return;
   event.preventDefault();
   closeProject();
+});
+
+// Enlaces a otro proyecto dentro de la misma página (por ejemplo, #erp).
+window.addEventListener('hashchange', () => {
+  const index = cards.findIndex((card) => `#${card.dataset.id}` === location.hash);
+  if (index < 0) return;
+  if (isOpen) switchProject(index);
+  else openProject(index);
 });
 
 window.addEventListener('portfolio-language-change', renderCopy);

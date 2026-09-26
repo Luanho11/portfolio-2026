@@ -2,7 +2,7 @@
 
 ## Fluid cursor
 
-The original portfolio attributes its SplashCursor adaptation to Dale Larroder. The underlying WebGL fluid simulation is based on Pavel Dobryakov’s MIT-licensed WebGL Fluid Simulation: https://github.com/PavelDoGreat/WebGL-Fluid-Simulation
+The fluid effect on the home page (`src/fluid-graphite.js`) is adapted from the SplashCursor component by Dale Larroder, which is based on Pavel Dobryakov’s MIT-licensed WebGL Fluid Simulation: https://github.com/PavelDoGreat/WebGL-Fluid-Simulation
 
 MIT License
 
@@ -30,15 +30,8 @@ SOFTWARE.
 
 Bricolage Grotesque and Manrope use the SIL Open Font License. Full notices are included in fonts/bricolage-LICENSE.txt and fonts/manrope-LICENSE.txt.
 
-## Pexels project imagery
-Preview imagery for the NOOVA ERP, NOOVA website, Deriva Jurídico and Facial Recognition cases, and their supporting imagery where noted, is loaded from Pexels. Pexels states that photos and videos may be used free for personal and commercial purposes and attribution is not required.
-
-License: https://www.pexels.com/license/
-Source photo IDs used: 8090142, 8090132, 8090303, 8090258, 6077091, 8112113, 159832, 7875842, 8731037, 32845694, 32594486, 10320852, 8090294.
-
-## Project-owned imagery
-NOOVA supporting gallery imagery combines published NOOVA website assets and screenshots of the site, and the NOOVA ERP gallery uses anonymized screenshots. Academic Chatbot, Hotels API, Authentication and Clinic visuals are screenshots of each project's own interface or source code. These are project-owned/reference assets rather than repeated crops of the portfolio thumbnail.
-
+## Project imagery
+All project images are screenshots of the projects themselves (their interfaces or source code). The NOOVA ERP screenshots hide client data and prices.
 
 ## Iconos de tecnologías
 

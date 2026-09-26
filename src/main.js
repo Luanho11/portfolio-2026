@@ -225,7 +225,7 @@ document.querySelectorAll('[data-copy-email]').forEach((button) => {
 /* Lightweight bilingual layer: keeps one DOM and swaps only real copy. */
 const COPY_EN = new Map(Object.entries({
   'Saltar al contenido':'Skip to content','Proyectos':'Projects','Perfil':'Profile','Servicios':'Services','Hablemos':'Let\'s talk','HABLEMOS':'LET\'S TALK',
-  'Desarrollador Full Stack Jr.':'Full Stack Developer Jr.','Sitios web y aplicaciones, del diseño a producción.':'Websites and applications, from design to production.',
+  'Desarrollador Full Stack':'Full Stack Developer','Sitios web y aplicaciones, del diseño a producción.':'Websites and applications, from design to production.',
   'Ver proyectos':'View projects','Mi experiencia':'My experience','Disponible para nuevas oportunidades y proyectos.':'Available for new opportunities and projects.',
   'Mi perfil.':'My profile.','Desarrollador web, egresado de CIBERTEC y estudiante de Ingeniería de Sistemas en UPN.':'Web developer, CIBERTEC graduate and Systems Engineering student at UPN.',
   'Ver CV (PDF) ↗':'View CV (PDF) ↗','Formación y certificaciones':'Education and certifications','Experiencia':'Experience','Practicante de Sistemas':'Systems Intern',

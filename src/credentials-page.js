@@ -12,7 +12,6 @@ const dialogImage = document.getElementById('certificateImage');
 const dialogTitle = document.getElementById('certificateTitle');
 const dialogIssuer = document.getElementById('certificateIssuer');
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
 
 const UI = {
   es: { back: 'Perfil', heading: 'Formación y certificaciones', es: 'Español · Nativo', en: 'Inglés · Avanzado', fr: 'Francés · Básico', prev: 'Anterior', next: 'Siguiente', view: 'Ver certificado', close: 'Cerrar' },
@@ -77,9 +76,10 @@ function layout({ instant = false } = {}) {
     const wraps = Math.abs(d - prevD) > 3;
     card.classList.toggle('is-instant', instant || wraps);
     card.dataset.d = String(d);
-    card.style.transform = `translate3d(${(side * slot.x * cw).toFixed(1)}px,0,${slot.z}px) rotateY(${(side * slot.ry).toFixed(1)}deg) scale(${slot.s})`;
+    // La tarjeta del frente queda sin transformación 3D ni filtro: así el navegador la dibuja nítida.
+    card.style.transform = d === 0 ? 'none' : `translate3d(${(side * slot.x * cw).toFixed(1)}px,0,${slot.z}px) rotateY(${(side * slot.ry).toFixed(1)}deg) scale(${slot.s})`;
     card.style.opacity = String(Math.abs(d) >= 3 ? 0 : slot.o);
-    card.style.filter = `brightness(${slot.b})`;
+    card.style.filter = d === 0 ? 'none' : `brightness(${slot.b})`;
     card.style.zIndex = String(10 - Math.abs(d));
     const isActive = d === 0;
     card.classList.toggle('is-active', isActive);
@@ -234,38 +234,6 @@ stage.addEventListener('wheel', (event) => {
   go(event.deltaX > 0 ? 1 : -1);
 }, { passive: false });
 
-/* Solo la tarjeta del frente se inclina con el cursor (como en la referencia). */
-const tilt = { x: 0, y: 0, tx: 0, ty: 0 };
-let tiltCard = null;
-stage.addEventListener('pointermove', (event) => {
-  if (!finePointer.matches || reduced.matches) return;
-  const r = stage.getBoundingClientRect();
-  tilt.tx = Math.max(-1, Math.min(1, ((event.clientX - r.left) / r.width - 0.5) * 2));
-  tilt.ty = Math.max(-1, Math.min(1, ((event.clientY - r.top) / r.height - 0.5) * 2));
-});
-stage.addEventListener('pointerleave', () => { tilt.tx = 0; tilt.ty = 0; });
-function tick() {
-  const front = inner.querySelector('.cred-card.is-active');
-  if (front !== tiltCard) {
-    // La tarjeta que sale vuelve a plano con transición; la nueva empieza recta.
-    if (tiltCard) tiltCard.style.rotate = '';
-    tiltCard = front;
-    tilt.x = 0;
-    tilt.y = 0;
-  }
-  tilt.x += (tilt.tx - tilt.x) * 0.06;
-  tilt.y += (tilt.ty - tilt.y) * 0.06;
-  if (tiltCard) {
-    const ry = tilt.x * 9;
-    const rx = -tilt.y * 7;
-    const angle = Math.hypot(rx, ry);
-    tiltCard.style.rotate = angle < 0.01 ? '' : `${(rx / angle).toFixed(4)} ${(ry / angle).toFixed(4)} 0 ${angle.toFixed(3)}deg`;
-    tiltCard.style.setProperty('--glare-x', `${(50 + tilt.x * 40).toFixed(1)}%`);
-    tiltCard.style.setProperty('--glare-y', `${(40 + tilt.y * 30).toFixed(1)}%`);
-  }
-  requestAnimationFrame(tick);
-}
-
 /* ---------- Visor ---------- */
 document.querySelector('[data-certificate-close]')?.addEventListener('click', () => dialog.close());
 dialog?.addEventListener('click', (e) => {
@@ -287,4 +255,3 @@ renderStaticCopy();
 layout({ instant: true });
 setBackground(cards[startAt], true);
 showCaption(cards[startAt], true);
-if (!reduced.matches) requestAnimationFrame(tick);
