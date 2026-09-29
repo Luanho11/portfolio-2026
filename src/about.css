@@ -134,14 +134,12 @@ html[data-theme="dark"] .company-logo--tall img{filter:brightness(1.9) saturate(
 html[data-theme="dark"] .credentials-launch .logo-mono,html[data-theme="dark"] .credentials-launch .logo-brand-dark{filter:none}
 @media(max-width:640px){.credentials-launch .logo-plate{width:50px;height:50px;border-radius:13px}.credentials-launch .logo-plate img{height:30px;max-width:38px}}
 
-/* Foto de perfil: avatar pequeño debajo de "Mi perfil." con anillo verde de "en línea" (como Discord). */
+/* Foto de perfil: avatar pequeño debajo de "Mi perfil." con anillo verde fijo, como los estados de WhatsApp. */
 .about-copy-col{display:grid;grid-template-columns:minmax(0,1fr);align-items:start}
 .about-copy-col>*{grid-column:1/-1}
 .about-title-col{display:flex;flex-direction:column;align-items:flex-start;gap:clamp(22px,3vw,34px)}
-.about-avatar{position:relative;display:block;width:52px;height:52px;flex-shrink:0;border-radius:50%;padding:3px;box-shadow:0 0 0 2px #23a55a;animation:about-online 2.8s ease-in-out infinite}
+.about-avatar{position:relative;display:block;width:52px;height:52px;flex-shrink:0;border-radius:50%;padding:3px;border:2.5px solid #25d366}
 .about-photo{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 30%;border-radius:50%;background:#2a2a2a}
-@keyframes about-online{0%,100%{box-shadow:0 0 0 2px #23a55a}50%{box-shadow:0 0 0 2px #23a55a,0 0 0 5px rgba(35,165,90,.18)}}
-@media(prefers-reduced-motion:reduce){.about-avatar{animation:none}}
 @media(max-width:900px){.about-title-col{flex-direction:row;align-items:center;justify-content:space-between}}
 @media(max-width:640px){.about-avatar{width:44px;height:44px}}
 /* "Usado en" separado de los íconos. */
