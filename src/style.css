@@ -207,3 +207,12 @@ a:hover>.round-arrow,a:focus-visible>.round-arrow{transform:translateX(4px)}
 /* Flechas redondas: al pasar el cursor por su tarjeta o enlace se pintan en sanguina, en todo el sitio. */
 a:hover .round-arrow,a:focus-visible .round-arrow,button:hover .round-arrow,button:focus-visible .round-arrow{background:var(--sanguine);color:#fff}
 .round-arrow{transition:background-color 260ms var(--ease),color 260ms var(--ease),transform 260ms var(--ease)}
+
+/* ---------- Cabecera fija: siempre visible arriba al bajar ---------- */
+html{scroll-padding-top:88px}
+.site-header{position:sticky;top:0;z-index:50;transition:box-shadow .3s ease,background-color 360ms ease}
+.site-header.is-scrolled{box-shadow:0 1px 0 var(--soft-line)}
+.page-projects .site-header,.page-credentials .site-header{position:relative}
+@media(max-width:640px){html{scroll-padding-top:72px}}
+/* Evita el rebote gris al llegar arriba/abajo y el resaltado azul al tocar en celular. */
+html{overscroll-behavior-y:none;-webkit-tap-highlight-color:transparent}

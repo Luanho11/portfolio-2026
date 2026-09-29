@@ -856,6 +856,9 @@ export function createSplashCursor(canvas, container, overrides={}) {
   raf=requestAnimationFrame(frame);
 
   return {
+    // Trazo programático (celular): coordenadas relativas al contenedor.
+    trace(x,y){ refreshInputRect(); sampleMotion(x,y,performance.now()); },
+    lift(){ resetPointer(); },
     setActive(value){
       if (active === value) return;
       active = value;

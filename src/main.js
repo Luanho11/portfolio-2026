@@ -77,23 +77,24 @@ if (landing && siteHeader) {
   syncHeaderHeight();
   window.addEventListener('resize', syncHeaderHeight, { passive: true });
 }
-/* El efecto de tinta se descarga y arranca solo cuando el cursor entra en el hero:
-   la primera carga no paga el coste de WebGL. */
+/* El efecto de tinta (grafito): en computadora arranca cuando el cursor entra al hero; en celular
+   arranca solo, con un trazo suave de bienvenida, y luego sigue el dedo al deslizar. */
+const pantallaTactil = !finePointer.matches;
 function startInk() {
   import('./fluid-graphite.js').then(({ createSplashCursor }) => {
     const effect = createSplashCursor(canvas, landing, {
-      SIM_RESOLUTION: 128,
-      DYE_RESOLUTION: 768,
-      DENSITY_DISSIPATION: 3.55,
+      SIM_RESOLUTION: pantallaTactil ? 96 : 128,
+      DYE_RESOLUTION: pantallaTactil ? 512 : 768,
+      DENSITY_DISSIPATION: pantallaTactil ? 4.2 : 3.55,
       VELOCITY_DISSIPATION: 1.86,
       PRESSURE: .10,
-      PRESSURE_ITERATIONS: 14,
+      PRESSURE_ITERATIONS: pantallaTactil ? 10 : 14,
       CURL: 3.1,
-      SPLAT_RADIUS: .092,
+      SPLAT_RADIUS: pantallaTactil ? .05 : .092,
       DYE_RADIUS_SCALE: .58,
       VELOCITY_RADIUS_SCALE: .96,
       SPLAT_STRETCH: 2.45,
-      SPLAT_FORCE: 6200,
+      SPLAT_FORCE: pantallaTactil ? 3000 : 6200,
       SHADING: true,
       INPUT_DEADZONE_PX: 4.5,
       TRAIL_SPACING_PX: 3.9,
@@ -103,10 +104,10 @@ function startInk() {
       PREDICTION_MS: 4.4,
       MAX_PREDICTION_PX: 7,
       CLICK_SPLAT: false,
-      DPR_CAP: 1.5,
+      DPR_CAP: pantallaTactil ? 1.25 : 1.5,
       COLOR_PALETTE: [[255,255,255],[236,236,236],[218,218,218]],
       COLOR_INTENSITY: .12,
-      INK_OPACITY: .66,
+      INK_OPACITY: pantallaTactil ? .5 : .66,
       INK_DENSITY_GAIN: 5.15
     });
     if (!effect) return;
@@ -132,10 +133,47 @@ function startInk() {
     window.addEventListener('pagehide', () => { clearTimeout(idleTimer); effect.setActive(false); });
     window.addEventListener('pageshow', wakeEffect);
     wakeEffect();
+
+    if (pantallaTactil && effect.trace) {
+      // El dedo deja tinta mientras se desliza por el hero (sin bloquear el scroll).
+      const seguirDedo = (event) => {
+        const touch = event.touches[0];
+        if (!touch) return;
+        const r = landing.getBoundingClientRect();
+        wakeEffect();
+        effect.trace(touch.clientX - r.left, touch.clientY - r.top);
+      };
+      landing.addEventListener('touchstart', (event) => { effect.lift(); seguirDedo(event); }, { passive: true });
+      landing.addEventListener('touchmove', seguirDedo, { passive: true });
+      landing.addEventListener('touchend', () => effect.lift(), { passive: true });
+
+      // Trazo de bienvenida: una curva lenta que cruza el hero.
+      let inicio = 0;
+      let trazoFrame = 0;
+      const duracion = 2600;
+      const trazar = (ahora) => {
+        if (!inicio) inicio = ahora;
+        const t = Math.min(1, (ahora - inicio) / duracion);
+        const r = landing.getBoundingClientRect();
+        const x = r.width * (0.08 + 0.84 * t);
+        const y = r.height * (0.8 + 0.08 * Math.sin(t * Math.PI * 2.2));
+        wakeEffect();
+        effect.trace(x, y);
+        if (t < 1) trazoFrame = requestAnimationFrame(trazar);
+        else effect.lift();
+      };
+      landing.addEventListener('touchstart', () => cancelAnimationFrame(trazoFrame), { passive: true, once: true });
+      trazoFrame = requestAnimationFrame(trazar);
+    }
   }).catch(() => { canvas.hidden = true; });
 }
-if (landing && canvas && finePointer.matches && !reducedMotion.matches) {
-  landing.addEventListener('pointermove', startInk, { once: true, passive: true });
+if (landing && canvas && !reducedMotion.matches) {
+  if (finePointer.matches) landing.addEventListener('pointermove', startInk, { once: true, passive: true });
+  else {
+    // En celular se espera a que la página termine de cargar para no competir con el primer pintado.
+    const arrancar = () => ('requestIdleCallback' in window ? requestIdleCallback(startInk, { timeout: 1500 }) : setTimeout(startInk, 600));
+    if (document.readyState === 'complete') arrancar(); else window.addEventListener('load', arrancar, { once: true });
+  }
 }
 
 const identityInner = document.getElementById('identityInner');
@@ -480,6 +518,14 @@ if (cabecera && navegacion) {
   document.addEventListener('click', (event) => { if (!cabecera.contains(event.target)) cerrarMenu(); });
 }
 
+/* ---------- Cabecera fija: línea sutil al bajar ---------- */
+if (cabecera) {
+  let cabeceraFrame = 0;
+  const marcarCabecera = () => { cabeceraFrame = 0; cabecera.classList.toggle('is-scrolled', window.scrollY > 4); };
+  window.addEventListener('scroll', () => { if (!cabeceraFrame) cabeceraFrame = requestAnimationFrame(marcarCabecera); }, { passive: true });
+  marcarCabecera();
+}
+
 /* ---------- Volver arriba: el menú no acompaña al bajar, así que este botón aparece abajo ---------- */
 const toTop = document.createElement('button');
 toTop.type = 'button';
@@ -529,7 +575,7 @@ if (revealTargets.length) {
         entry.target.classList.add('is-revealed');
         revealObserver.unobserve(entry.target);
       });
-    }, { rootMargin: '0px 0px -12% 0px' });
+    }, { rootMargin: '0px 0px 12% 0px' });
     revealTargets.forEach((el) => revealObserver.observe(el));
   }
 }

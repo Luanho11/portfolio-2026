@@ -97,5 +97,7 @@ function stickyStage(section) {
 
 if (!reduced) {
   const work = document.getElementById('trabajo');
-  if (work) { stickyStage(work); letterEffect(work); }
+  // En celular el texto queda siempre nítido: el desenfoque al hacer scroll se sentía como cortes.
+  const escritorio = matchMedia('(min-width: 901px) and (pointer: fine)').matches;
+  if (work) { stickyStage(work); if (escritorio) letterEffect(work); }
 }
