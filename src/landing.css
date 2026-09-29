@@ -102,10 +102,10 @@ html[data-theme="dark"] .contact-icon--cv{--brand:#ff6b61}
 .contact-icon:hover .animated-icon,.contact-icon:focus-visible .animated-icon{color:var(--brand)}
 .contact-icon:hover span::after,.contact-icon:focus-visible span::after{color:var(--brand)}
 
-/* ---------- Proyectos destacados: texto que entra y sale con desenfoque (home.js) ---------- */
+/* ---------- Proyectos destacados: texto que entra y sale al hacer scroll (home.js) ---------- */
 .home-work.is-lettered .work-row{padding-block:clamp(56px,11vh,120px)}
 .home-work.is-lettered .work-row+.work-row{margin-top:0}
-.fx-line{will-change:opacity,filter,transform}
+.fx-line{will-change:opacity,transform}
 
 /* Escritorio: la captura queda fija en pantalla y los textos pasan a su lado; al cambiar de
    proyecto la captura se funde con la siguiente (clase .is-staged, la pone home.js). */

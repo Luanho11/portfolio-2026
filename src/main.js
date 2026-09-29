@@ -124,7 +124,8 @@ function startInk() {
       syncEffect();
       idleTimer = window.setTimeout(() => { idle = true; syncEffect(); }, 2600);
     };
-    const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; syncEffect(); });
+    // Se pausa en cuanto el hero deja de verse casi completo: al bajar, la tinta no gasta GPU.
+    const observer = new IntersectionObserver(([entry]) => { visible = entry.intersectionRatio >= 0.6; syncEffect(); }, { threshold: [0, 0.6] });
     observer.observe(landing);
     landing.addEventListener('pointerenter', wakeEffect, { passive:true });
     landing.addEventListener('pointermove', wakeEffect, { passive:true });
@@ -272,6 +273,8 @@ const COPY_EN = new Map(Object.entries({
   "Responsable del área de TI":"In charge of the IT area",
   "Lidero el área de TI: seleccioné a un equipo de 2 personas y defino los requerimientos, la arquitectura y el diseño de cada proyecto.":"I lead the IT area: I hired a team of 2 and define the requirements, architecture and design of every project.",
   "Desarrollé la web corporativa y un ERP interno de clientes, cotizaciones y compras. En desarrollo: Noova Learn Mining, su plataforma de formación.":"I built the corporate website and an internal ERP for clients, quotations and purchasing. In progress: Noova Learn Mining, its training platform.",
+  "El ERP incluye permisos por rol, dashboards y generación de documentos PDF. En la web configuré el SEO técnico, el dominio y el hosting, y reporto el avance de cada proyecto a gerencia.":"The ERP includes role-based permissions, dashboards and PDF generation. For the website I set up technical SEO, the domain and hosting, and I report each project's progress to management.",
+  "Integré Firestore y Storage, y con Firebase Functions cada artículo genera su propia vista previa al compartirse en redes.":"I integrated Firestore and Storage, and with Firebase Functions every article generates its own preview when shared on social media.",
   "Construí una plataforma editorial con panel administrativo, roles y gestión de publicaciones y autores.":"I built an editorial platform with an admin panel, roles, and publication and author management.",
   "Junio 2026 — Actualidad · Lima, Perú":"June 2026 — Present · Lima, Peru",
   "Desarrollador Web Freelance":"Freelance Web Developer",
@@ -401,6 +404,7 @@ const COPY_EN = new Map(Object.entries({
   "Capturas":"Screenshots",
   "Stack":"Stack",
   "Contacto":"Contact",
+  "Disponible":"Available",
   "Una web nueva, un catálogo o mejorar tu sitio actual":"A new website, a catalog or improving your current site",
   "Oportunidades laborales y propuestas de trabajo":"Job opportunities and work proposals",
   "Finalizado":"Completed",
@@ -496,6 +500,28 @@ if (cabecera && navegacion) {
   navegacion.addEventListener('click', (event) => { if (event.target.closest('a, button')) cerrarMenu(); });
   document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && cabecera.classList.contains('is-menu-open')) { cerrarMenu(); botonMenu.focus(); } });
   document.addEventListener('click', (event) => { if (!cabecera.contains(event.target)) cerrarMenu(); });
+}
+
+/* ---------- Botón magnético: el Contacto de Perfil se inclina un poco hacia el cursor al pasar encima ---------- */
+const botonMagnetico = document.querySelector('.profile-talk');
+if (botonMagnetico && finePointer.matches && !reducedMotion.matches) {
+  botonMagnetico.classList.add('is-magnetic');
+  const fuerza = 0.18;
+  const maximo = 6;
+  const limitar = (valor) => Math.max(-maximo, Math.min(maximo, valor));
+  botonMagnetico.addEventListener('pointermove', (event) => {
+    const r = botonMagnetico.getBoundingClientRect();
+    const dx = event.clientX - (r.left + r.width / 2);
+    const dy = event.clientY - (r.top + r.height / 2);
+    botonMagnetico.classList.add('is-pulling');
+    botonMagnetico.style.setProperty('--mx', `${limitar(dx * fuerza).toFixed(1)}px`);
+    botonMagnetico.style.setProperty('--my', `${limitar(dy * fuerza).toFixed(1)}px`);
+  }, { passive: true });
+  botonMagnetico.addEventListener('pointerleave', () => {
+    botonMagnetico.classList.remove('is-pulling');
+    botonMagnetico.style.setProperty('--mx', '0px');
+    botonMagnetico.style.setProperty('--my', '0px');
+  });
 }
 
 /* ---------- Cabecera fija: línea sutil al bajar ---------- */

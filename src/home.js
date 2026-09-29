@@ -1,7 +1,7 @@
 /*
  * Inicio, debajo del hero:
  * - Proyectos destacados: en escritorio la captura queda fija mientras los textos pasan; cada texto
- *   entra desenfocado desde abajo y se desenfoca al salir por arriba.
+ *   aparece desde abajo y se desvanece al salir por arriba (sin desenfoque).
  * Todo responde al scroll con inercia; sin scroll no hay movimiento. Con "reducir movimiento" no se anima.
  */
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
@@ -27,24 +27,35 @@ function letterEffect(section) {
   section.classList.add('is-lettered');
   const state = new Map(lines.map((el) => [el, { v: -1 }]));
 
+  const cabecera = document.querySelector('.site-header');
   frameLoop(() => {
     const vh = innerHeight;
+    // Primero se leen todas las medidas y después se escriben los estilos: así el navegador
+    // no recalcula el diseño por cada línea (mejor rendimiento al hacer scroll).
+    // Con la cabecera fija, el texto sale por debajo de ella para que se vea el desvanecido.
+    const topeCabecera = cabecera ? cabecera.getBoundingClientRect().bottom : 0;
+    const medidas = lines.map((el) => el.getBoundingClientRect());
     let moving = false;
-    lines.forEach((el) => {
-      const r = el.getBoundingClientRect();
-      // Entra entre el 100 % y el 72 % de la pantalla; sale entre el 14 % y el −6 %: el texto queda
-      // nítido casi todo su recorrido y solo se desenfoca en los bordes.
+    lines.forEach((el, i) => {
+      const r = medidas[i];
+      // Entra desde abajo de la pantalla y sale justo debajo de la cabecera, solo con opacidad y
+      // desplazamiento: sin desenfoque, para que el texto no se vea grueso y luego nítido.
       const enter = smooth(vh - r.top, 0, vh * 0.28);
-      const exit = smooth(vh * 0.14 - r.bottom, 0, vh * 0.2);
+      const exit = smooth(topeCabecera + vh * 0.16 - r.bottom, 0, vh * 0.2);
       const target = enter * (1 - exit) + exit * 2;
       const s = state.get(el);
-      s.v = s.v < 0 ? target : s.v + (target - s.v) * 0.12;
-      if (Math.abs(target - s.v) > 0.002) moving = true;
+      s.v = s.v < 0 ? target : s.v + (target - s.v) * 0.2;
+      // Cerca del final se ajusta al valor exacto: el texto termina 100 % opaco y quieto (nítido).
+      if (Math.abs(target - s.v) < 0.01) s.v = target; else moving = true;
       const inV = Math.min(s.v, 1);
       const outV = Math.max(s.v - 1, 0);
-      el.style.opacity = (inV * (1 - outV)).toFixed(3);
-      el.style.filter = `blur(${((1 - inV) * 5 + outV * 4).toFixed(2)}px)`;
-      el.style.transform = `translate3d(0, ${((1 - inV) * 24 - outV * 12).toFixed(1)}px, 0)`;
+      const alpha = inV * (1 - outV);
+      const opacity = alpha >= 0.999 ? '' : alpha.toFixed(3);
+      const shift = ((1 - inV) * 24 - outV * 12).toFixed(1);
+      const transform = shift === '0.0' || shift === '-0.0' ? 'none' : `translate3d(0, ${shift}px, 0)`;
+      // Solo se escribe lo que cambió.
+      if (s.opacity !== opacity) { el.style.opacity = opacity; s.opacity = opacity; }
+      if (s.transform !== transform) { el.style.transform = transform; s.transform = transform; }
     });
     return moving;
   }, section)();
@@ -85,7 +96,8 @@ function stickyStage(section) {
 
   measure();
   pick();
-  addEventListener('scroll', pick, { passive: true });
+  let pickFrame = 0;
+  addEventListener('scroll', () => { if (!pickFrame) pickFrame = requestAnimationFrame(() => { pickFrame = 0; pick(); }); }, { passive: true });
   addEventListener('resize', () => { measure(); active = -1; pick(); });
   wide.addEventListener('change', () => {
     measure();

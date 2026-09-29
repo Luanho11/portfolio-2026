@@ -216,3 +216,11 @@ html{scroll-padding-top:88px}
 @media(max-width:640px){html{scroll-padding-top:72px}}
 /* Evita el rebote gris al llegar arriba/abajo y el resaltado azul al tocar en celular. */
 html{overscroll-behavior-y:none;-webkit-tap-highlight-color:transparent}
+
+/* Botón magnético de Contacto (main.js mueve --mx/--my; solo con mouse). */
+.is-magnetic{transform:translate3d(var(--mx,0px),var(--my,0px),0);transition:transform .45s cubic-bezier(.16,1,.3,1),background-color 220ms ease,color 220ms ease}
+.is-magnetic.is-pulling{transition:transform .25s cubic-bezier(.16,1,.3,1),background-color 220ms ease,color 220ms ease}
+
+/* Texto que se mueve (botón magnético, rotador del hero): se mantiene en su propia capa para que
+   el navegador no cambie cómo dibuja las letras al empezar o terminar el movimiento. */
+.is-magnetic,.identity-inner{will-change:transform;backface-visibility:hidden}
