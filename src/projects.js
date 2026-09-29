@@ -12,32 +12,20 @@ const hero = document.getElementById('detailHero');
 const heroImg = document.getElementById('detailImage');
 const backButton = document.getElementById('detailBack');
 const moreButton = document.getElementById('detailMore');
-const nextButton = document.getElementById('detailNext');
 const el = (id) => document.getElementById(id);
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 const compact = matchMedia('(max-width: 720px)');
-const canHover = matchMedia('(hover: hover) and (pointer: fine)');
 
 const UI = {
   es: {
-    back: 'Proyectos', more: 'Ver detalles', gallery: 'Capturas', next: 'Siguiente proyecto', wins: 'Qué construí',
-    ctaTitle: '¿Necesitas algo similar para tu empresa?', ctaButton: 'Escríbeme por WhatsApp', context: 'Contexto', role: 'Mi rol', stack: 'Stack',
-    heading: 'Proyectos', lead: 'Sitios publicados, sistemas internos y proyectos académicos: del diseño a producción.',
-    work: 'Profesionales', academic: 'Académicos', zoom: 'Ampliar', prev: 'Captura anterior', nextShot: 'Captura siguiente',
-    idleKicker: '3 profesionales · 5 académicos', idleTitle: 'Elige un proyecto',
-    idleDesc: 'Los profesionales están publicados y en uso; los académicos incluyen su repositorio.',
-    idleHintHover: 'Pasa el cursor por los paneles', idleHintTouch: 'Desliza para ver más →',
-    open: 'Clic para ver el proyecto →', openTouch: 'Toca para ver el proyecto →',
+    back: 'Proyectos', more: 'Ver detalles', gallery: 'Capturas', wins: 'Qué construí',
+    ctaTitle: 'Cotiza algo similar', ctaButton: 'Escríbeme por WhatsApp', problem: 'Problema', solution: 'Solución', before: 'Antes', after: 'Ahora', approx: 'Aproximado', mode: 'Versión del sitio',
+    heading: 'Proyectos', work: 'Profesionales', academic: 'Técnicos', zoom: 'Ampliar', prev: 'Captura anterior', nextShot: 'Captura siguiente',
   },
   en: {
-    back: 'Projects', more: 'View details', gallery: 'Screenshots', next: 'Next project', wins: 'What I built',
-    ctaTitle: 'Need something similar for your business?', ctaButton: 'Message me on WhatsApp', context: 'Context', role: 'My role', stack: 'Stack',
-    heading: 'Projects', lead: 'Published websites, internal systems and academic projects: from design to production.',
-    work: 'Professional', academic: 'Academic', zoom: 'Enlarge', prev: 'Previous screenshot', nextShot: 'Next screenshot',
-    idleKicker: '3 professional · 5 academic', idleTitle: 'Pick a project',
-    idleDesc: 'Professional projects are live and in use; academic ones include their repository.',
-    idleHintHover: 'Hover over the panels', idleHintTouch: 'Swipe to see more →',
-    open: 'Click to view the project →', openTouch: 'Tap to view the project →',
+    back: 'Projects', more: 'View details', gallery: 'Screenshots', wins: 'What I built',
+    ctaTitle: 'Get a quote for something similar', ctaButton: 'Message me on WhatsApp', problem: 'The problem', solution: 'The solution', before: 'Before', after: 'Now', approx: 'Approximate', mode: 'Site version',
+    heading: 'Projects', work: 'Professional', academic: 'Technical', zoom: 'Enlarge', prev: 'Previous screenshot', nextShot: 'Next screenshot',
   },
 };
 // Curva suave al inicio y al final; duración corta para llegar rápido al contenido.
@@ -67,11 +55,21 @@ const lenis = new Lenis({
   autoRaf: false,
 });
 lenis.stop();
+// El bucle de Lenis solo corre mientras el detalle está abierto.
+let lenisFrame = 0;
 function raf(time) {
   lenis.raf(time);
-  requestAnimationFrame(raf);
+  lenisFrame = requestAnimationFrame(raf);
 }
-requestAnimationFrame(raf);
+function startScroll() {
+  lenis.start();
+  if (!lenisFrame) lenisFrame = requestAnimationFrame(raf);
+}
+function stopScroll() {
+  lenis.stop();
+  cancelAnimationFrame(lenisFrame);
+  lenisFrame = 0;
+}
 
 /* ---------- Categoría dentro de cada panel ---------- */
 cards.forEach((card) => {
@@ -81,25 +79,26 @@ cards.forEach((card) => {
   card.append(kicker);
 });
 
-/* ---------- Ficha inferior: describe el proyecto bajo el cursor ---------- */
+/* ---------- Ficha inferior: describe el proyecto bajo el cursor (vacía si no hay ninguno) ---------- */
 // Categoría + empresa/tipo y año, sin el cargo (que ya aparece en el detalle).
-const infoKicker = (card) => [text(card, 'kicker'), ...text(card, 'context').split(' · ').filter((part) => !/practicante|intern/i.test(part))]
+const infoKicker = (card) => [text(card, 'kicker'), ...text(card, 'context').split(' · ').filter((part) => !/practicante|intern|área de ti|it department/i.test(part))]
   .filter(Boolean).join(' · ');
+const infoBox = document.querySelector('.reel-info');
 let infoIndex = null;
 function renderInfo(index, animate = true) {
   const changed = infoIndex !== index;
   infoIndex = index;
   const card = cards[index];
-  const touch = !canHover.matches || compact.matches;
   const apply = () => {
-    el('infoKicker').textContent = card ? infoKicker(card) : t('idleKicker');
-    el('infoTitle').textContent = card ? text(card, 'title') : t('idleTitle');
-    el('infoDesc').textContent = card ? text(card, 'desc') : t('idleDesc');
-    el('infoTech').textContent = card ? card.dataset.tech : '';
-    el('infoHint').textContent = card ? t(touch ? 'openTouch' : 'open') : t(touch ? 'idleHintTouch' : 'idleHintHover');
+    infoBox.classList.toggle('is-idle', !card);
+    if (!card) return;
+    el('infoKicker').textContent = infoKicker(card);
+    el('infoTitle').textContent = text(card, 'title');
+    el('infoDesc').textContent = text(card, 'desc');
+    el('infoTech').textContent = card.dataset.tech;
   };
-  const box = document.querySelector('.reel-info');
-  if (!animate || !changed || reduced.matches) { apply(); return; }
+  const box = infoBox;
+  if (!animate || !changed || reduced.matches || !card) { apply(); return; }
   box.getAnimations().forEach((a) => a.cancel());
   box.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 140, easing: 'ease-in' }).finished.then(() => {
     apply();
@@ -122,7 +121,7 @@ function renderCopy() {
 
 // Los paneles se revelan cuando sus imágenes ya cargaron, así la animación no muestra cajas vacías.
 const cardImages = cards.map((card) => card.querySelector('img').decode().catch(() => card.classList.add('is-broken')));
-Promise.race([Promise.all(cardImages), wait(2500)]).then(() => rack.classList.add('is-ready'));
+Promise.race([Promise.all(cardImages), wait(900)]).then(() => rack.classList.add('is-ready'));
 
 /* ---------- Hover / foco (acordeón estable) ---------- */
 function setHot(index) {
@@ -171,7 +170,7 @@ rack.addEventListener('scroll', () => {
       const dist = Math.abs(r.left + r.width / 2 - anchor);
       if (dist < bestDist) { bestDist = dist; best = i; }
     });
-    renderInfo(rack.scrollLeft < 8 ? -1 : best);
+    renderInfo(best);
   }, 90);
 }, { passive: true });
 
@@ -181,53 +180,86 @@ const zoomImg = el('reelZoomImg');
 zoom.addEventListener('click', () => zoom.close());
 const track = el('shotsTrack');
 const thumbs = el('shotsThumbs');
-const shots = { index: 0, sources: [], captions: [] };
-const isPhoneShot = (src) => /(movil|mobile)/i.test(src);
+const shots = { index: 0, slides: [], captions: [] };
 
-function buildGallery(card) {
-  shots.sources = list(card.dataset.gallery);
-  shots.captions = list(text(card, 'captions'));
+/* Cada diapositiva es una captura de escritorio; "a.webp+b.webp" añade la versión móvil superpuesta. */
+function zoomTo(src, alt) {
+  if (dragMoved) return;
+  zoomImg.src = src;
+  zoomImg.alt = alt;
+  zoom.showModal();
+}
+function shotImage(src, alt, className) {
+  const img = document.createElement('img');
+  img.src = src;
+  img.alt = alt;
+  img.decoding = 'async';
+  img.draggable = false;
+  if (className) img.className = className;
+  return img;
+}
+
+// Antes / Ahora: si el proyecto reemplazó un sitio anterior, el carrusel puede mostrar las dos versiones.
+const modeGroup = el('shotsMode');
+let galleryCard = null;
+let galleryMode = 'after';
+function syncMode(card, mode) {
+  const hasBefore = Boolean(card.dataset.before);
+  modeGroup.hidden = !hasBefore;
+  modeGroup.setAttribute('aria-label', t('mode'));
+  modeGroup.querySelectorAll('[data-mode]').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.mode === mode)));
+}
+modeGroup?.addEventListener('click', (event) => {
+  const button = event.target.closest('[data-mode]');
+  if (!button || !galleryCard || button.getAttribute('aria-pressed') === 'true') return;
+  buildGallery(galleryCard, button.dataset.mode);
+});
+
+function buildGallery(card, mode = 'after') {
+  galleryCard = card;
+  const before = mode === 'before' && card.dataset.before;
+  galleryMode = before ? 'before' : 'after';
+  syncMode(card, galleryMode);
+  shots.slides = list(before ? card.dataset.before : card.dataset.gallery).map((slide) => slide.split('+').map((s) => s.trim()));
+  shots.captions = list(text(card, before ? 'beforeCaptions' : 'captions'));
   shots.index = 0;
-  const single = shots.sources.length < 2;
-  el('shots').classList.toggle('is-single', single);
+  el('shots').classList.toggle('is-single', shots.slides.length < 2);
 
-  track.replaceChildren(...shots.sources.map((src, i) => {
+  track.replaceChildren(...shots.slides.map(([src, phone], i) => {
+    const alt = shots.captions[i] || '';
     const li = document.createElement('li');
-    li.className = `shot${isPhoneShot(src) ? ' shot--phone' : ''}`;
+    li.className = `shot${phone ? ' shot--with-phone' : ''}`;
     li.setAttribute('aria-roledescription', 'slide');
+    const frame = document.createElement('div');
+    frame.className = 'shot__frame';
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'shot__zoom';
-    const img = document.createElement('img');
-    img.src = src;
-    img.alt = shots.captions[i] || '';
-    img.decoding = 'async';
-    if (i > 1) img.loading = 'lazy';
+    const img = shotImage(src, alt);
     // Capturas altas de código: se muestran desde arriba llenando el marco; se amplían al hacer clic.
-    img.addEventListener('load', () => {
-      if (!isPhoneShot(src) && img.naturalWidth / img.naturalHeight < 1.25) li.classList.add('shot--tall');
-    });
-    button.addEventListener('click', () => {
-      if (dragMoved) return;
-      zoomImg.src = src;
-      zoomImg.alt = img.alt;
-      zoom.showModal();
-    });
+    const markTall = () => { if (img.naturalWidth / img.naturalHeight < 1.25) li.classList.add('shot--tall'); };
+    if (img.complete && img.naturalWidth) markTall(); else img.addEventListener('load', markTall, { once: true });
+    button.addEventListener('click', () => zoomTo(src, alt));
     button.append(img);
-    li.append(button);
+    frame.append(button);
+    if (phone) {
+      const phoneButton = document.createElement('button');
+      phoneButton.type = 'button';
+      phoneButton.className = 'shot__phone';
+      phoneButton.append(shotImage(phone, ''));
+      phoneButton.addEventListener('click', () => zoomTo(phone, alt));
+      frame.append(phoneButton);
+    }
+    li.append(frame);
     return li;
   }));
 
-  thumbs.replaceChildren(...shots.sources.map((src, i) => {
+  thumbs.replaceChildren(...shots.slides.map(([src], i) => {
     const b = document.createElement('button');
     b.type = 'button';
-    b.className = `shots__thumb${isPhoneShot(src) ? ' is-phone' : ''}`;
+    b.className = 'shots__thumb';
     b.setAttribute('aria-label', shots.captions[i] || `${i + 1}`);
-    const img = document.createElement('img');
-    img.src = src;
-    img.alt = '';
-    img.loading = 'lazy';
-    b.append(img);
+    b.append(shotImage(src, ''));
     b.addEventListener('click', () => showShot(i));
     return b;
   }));
@@ -235,19 +267,21 @@ function buildGallery(card) {
 }
 
 function showShot(index, { instant = false } = {}) {
-  const n = shots.sources.length;
+  const n = shots.slides.length;
   if (!n) return;
   shots.index = (index + n) % n;
   track.style.transition = instant || reduced.matches ? 'none' : '';
   track.style.transform = `translate3d(${-shots.index * 100}%,0,0)`;
   [...track.children].forEach((li, i) => {
     li.inert = i !== shots.index;
-    li.querySelector('button').setAttribute('aria-label', `${t('zoom')}: ${shots.captions[i] || ''}`);
+    li.classList.toggle('is-active', i === shots.index);
+    li.querySelector('.shot__zoom').setAttribute('aria-label', `${t('zoom')}: ${shots.captions[i] || ''}`);
+    li.querySelector('.shot__phone')?.setAttribute('aria-label', `${t('zoom')}: ${shots.captions[i] || ''}`);
   });
   [...thumbs.children].forEach((b, i) => b.setAttribute('aria-current', String(i === shots.index)));
-  el('shotsCount').textContent = `${String(shots.index + 1).padStart(2, '0')} / ${String(n).padStart(2, '0')}`;
   el('shotsCaption').textContent = shots.captions[shots.index] || '';
-  thumbs.children[shots.index]?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  const thumb = thumbs.children[shots.index];
+  if (thumb) thumbs.scrollTo({ left: thumb.offsetLeft - thumbs.clientWidth / 2 + thumb.offsetWidth / 2, behavior: instant ? 'auto' : 'smooth' });
 }
 
 el('shotsPrev').addEventListener('click', () => showShot(shots.index - 1));
@@ -273,7 +307,9 @@ stageEl.addEventListener('pointermove', (event) => {
     dragMoved = true;
     track.style.transition = 'none';
   }
-  if (dragMoved) track.style.transform = `translate3d(calc(${-shots.index * 100}% + ${dx}px),0,0)`;
+  // Resistencia en los extremos para que el arrastre se sienta físico.
+  const edge = (shots.index === 0 && dx > 0) || (shots.index === shots.slides.length - 1 && dx < 0);
+  if (dragMoved) track.style.transform = `translate3d(calc(${-shots.index * 100}% + ${edge ? dx * 0.3 : dx}px),0,0)`;
 });
 const endDrag = (event) => {
   if (!drag || event.pointerId !== drag.id) return;
@@ -302,20 +338,28 @@ stageEl.addEventListener('wheel', (event) => {
 /* ---------- Detalle ---------- */
 function fillDetail(index, { rebuildGallery = true } = {}) {
   const card = cards[index];
-  el('detailKicker').textContent = text(card, 'kicker');
+  // Si la categoría ya está en el título (p. ej. "Web corporativa NOOVA"), el banner muestra el contexto.
+  const kicker = text(card, 'kicker');
+  el('detailKicker').textContent = text(card, 'title').toLowerCase().includes(kicker.toLowerCase())
+    ? text(card, 'context').split(' · ')[0] : kicker;
   el('detailTitle').textContent = text(card, 'title');
-  el('detailDescription').textContent = text(card, 'desc');
-  el('detailStack').textContent = card.dataset.tech || '';
-  el('detailContext').textContent = text(card, 'context');
-  el('detailContextRow').hidden = !text(card, 'context');
-  el('detailRole').textContent = text(card, 'role');
-  el('detailRoleRow').hidden = !text(card, 'role');
-  el('detailNote').textContent = text(card, 'note');
+  // Historia del proyecto en lenguaje simple: qué pasaba, qué se hizo y cómo.
+  el('detailProblem').textContent = text(card, 'problem');
+  el('detailSolution').textContent = text(card, 'solution');
+  // Resultado en cifras (si lo hay), con la aclaración de que es aproximado.
+  const metric = text(card, 'metric');
+  el('detailMetric').hidden = !metric;
+  if (metric) {
+    el('detailMetricValue').textContent = metric;
+    el('detailMetricLabel').textContent = text(card, 'metricLabel');
+  }
   // CTA final: WhatsApp con el nombre del proyecto ya escrito en el mensaje.
   const message = lang() === 'en'
     ? `Hi Luis, I saw the ${text(card, 'title')} project in your portfolio and would like information about a similar project.`
     : `Hola Luis, vi el proyecto ${text(card, 'title')} en tu portfolio y quisiera información para un proyecto similar.`;
   el('detailWhatsapp').href = `https://wa.me/51970465608?text=${encodeURIComponent(message)}`;
+  // Los proyectos técnicos no llevan CTA comercial: su enlace es el repositorio.
+  document.querySelector('.reel-cta').hidden = !card.closest('.reel-item--featured');
   el('detailWins').replaceChildren(...list(text(card, 'wins')).map((win) => { const li = document.createElement('li'); li.textContent = win; return li; }));
   heroImg.alt = text(card, 'title');
   const href = card.dataset.href || '';
@@ -324,12 +368,12 @@ function fillDetail(index, { rebuildGallery = true } = {}) {
   el('detailPrivate').hidden = Boolean(href);
   if (href) { link.href = href; el('detailCta').textContent = text(card, 'cta'); }
   else el('detailPrivateText').textContent = text(card, 'cta');
-  el('nextTitle').textContent = text(cards[(index + 1) % cards.length], 'title');
   if (rebuildGallery) buildGallery(card);
   else {
-    shots.captions = list(text(card, 'captions'));
+    syncMode(card, galleryMode);
+    shots.captions = list(text(card, galleryMode === 'before' ? 'beforeCaptions' : 'captions'));
     [...thumbs.children].forEach((b, i) => b.setAttribute('aria-label', shots.captions[i] || `${i + 1}`));
-    [...track.children].forEach((li, i) => { li.querySelector('img').alt = shots.captions[i] || ''; });
+    [...track.children].forEach((li, i) => { li.querySelector('.shot__zoom img').alt = shots.captions[i] || ''; });
     showShot(shots.index, { instant: true });
   }
 }
@@ -444,7 +488,7 @@ async function openProject(index, { instant = false } = {}) {
     detail.classList.add('is-open', 'is-revealed');
     card.classList.add('is-source');
     stage.classList.add('is-detail');
-    lenis.start();
+    startScroll();
     busy = false;
     if (!instant) backButton.focus({ preventScroll: true });
     return;
@@ -460,7 +504,7 @@ async function openProject(index, { instant = false } = {}) {
   await pending;
   clearMorph();
   detail.classList.add('is-revealed');
-  lenis.start();
+  startScroll();
   busy = false;
   backButton.focus({ preventScroll: true });
   if (closeQueued) { closeQueued = false; closeProject(); }
@@ -488,7 +532,7 @@ async function closeProject() {
   const card = cards[current];
   detail.classList.remove('is-revealed');
   await scrollDetailTop();
-  lenis.stop();
+  stopScroll();
   settleRack(current);
 
   let heroFade;
@@ -555,7 +599,6 @@ backButton.addEventListener('click', closeProject);
 moreButton.addEventListener('click', () => {
   lenis.scrollTo(el('detailAbout'), { offset: -24, duration: reduced.matches ? 0 : 0.9 });
 });
-nextButton.addEventListener('click', () => switchProject((current + 1) % cards.length));
 
 window.addEventListener('keydown', (event) => {
   if (event.key !== 'Escape' || !isOpen) return;
@@ -576,6 +619,14 @@ window.addEventListener('portfolio-language-change', renderCopy);
 
 /* ---------- Inicio ---------- */
 renderCopy();
+// En móvil no hay cursor: la ficha empieza describiendo el primer panel.
+if (compact.matches) renderInfo(0, false);
 requestAnimationFrame(() => document.querySelector('.reel-intro').classList.add('is-in'));
 const fromHash = cards.findIndex((card) => `#${card.dataset.id}` === location.hash);
 if (fromHash >= 0) openProject(fromHash, { instant: true });
+
+/* Botón "volver arriba" (main.js) con el detalle abierto: sube dentro del detalle. */
+window.addEventListener('portfolio-scroll-top', () => {
+  lenis.scrollTo(0, { duration: reduced.matches ? 0 : 1.1 });
+  el('detailBack')?.focus({ preventScroll: true });
+});

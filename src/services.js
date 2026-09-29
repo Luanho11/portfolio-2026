@@ -43,10 +43,7 @@ const responsiveDemo = document.getElementById('responsiveDemo');
 if (responsiveDemo) {
   responsiveDemo.querySelectorAll('[data-preview]').forEach((button) => {
     button.addEventListener('click', () => {
-      const mobile = button.dataset.preview === 'mobile';
       responsiveDemo.dataset.view = button.dataset.preview;
-      responsiveDemo.querySelector('.preview-desktop').hidden = mobile;
-      responsiveDemo.querySelector('.preview-mobile').hidden = !mobile;
       responsiveDemo.querySelectorAll('[data-preview]').forEach((control) => control.setAttribute('aria-pressed', String(control === button)));
     });
   });

@@ -1,37 +1,44 @@
-/* Fuentes servidas desde el propio sitio (SIL OFL; licencias en public/fonts). */
+/* Fuentes servidas desde el propio sitio (SIL OFL; licencias en public/fonts).
+   Bricolage Grotesque: títulos e interfaz (su eje óptico la mantiene legible en tamaños pequeños).
+   Newsreader: todo lo que se lee como texto corrido. */
 @font-face{font-family:"Bricolage Grotesque";font-style:normal;font-weight:200 800;font-display:swap;src:url('./fonts/bricolage-grotesque.woff2') format('woff2')}
-@font-face{font-family:"Manrope";font-style:normal;font-weight:200 800;font-display:swap;src:url('./fonts/manrope.woff2') format('woff2')}
+@font-face{font-family:"Newsreader";font-style:normal;font-weight:400;font-display:swap;src:url('./fonts/newsreader.woff2') format('woff2')}
+@font-face{font-family:"Newsreader";font-style:italic;font-weight:400;font-display:swap;src:url('./fonts/newsreader-italic.woff2') format('woff2')}
 :root{
   --display:"Bricolage Grotesque",Arial,sans-serif;
-  --sans:"Manrope",Arial,sans-serif;
+  --sans:"Bricolage Grotesque",Arial,sans-serif;
+  --serif:"Newsreader",Georgia,serif;
   --page:#f7f7f5;
-  --page-alt:#efefec;
+  --page-alt:#eeeeea;
   --ink:#111111;
-  --muted:#6d6d67;
+  --muted:#5e5e58;
   --line:rgba(17,17,17,.17);
   --soft-line:rgba(17,17,17,.09);
   --accent:#1f5960;
   --forest:#245f51;
   --blue:#2d537b;
+  /* Color cálido (sanguina) para dar vida en detalles: puntos, iconos, la mano del inicio. */
+  --sanguine:#b04a2c;
 }
 
 html[data-theme="dark"]{
-  --page:#111111;
-  --page-alt:#171717;
+  --page:#000000;
+  --page-alt:#101010;
   --ink:#f4f4f1;
-  --muted:#aaa9a1;
+  --muted:#a09f98;
   --line:rgba(255,255,255,.20);
   --soft-line:rgba(255,255,255,.10);
   --accent:#8fc6c7;
   --forest:#a6d2bf;
   --blue:#abc5e7;
+  --sanguine:#f08a5d;
   color-scheme:dark;
 }
 
 *{box-sizing:border-box}
 html,body{margin:0;min-width:320px;min-height:100%;background:var(--page);color:var(--ink)}
 html{scroll-behavior:smooth}
-body{font-family:var(--sans);-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}
+body{font-family:var(--sans);font-optical-sizing:auto;font-synthesis:none;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 a{color:inherit;text-decoration:none}
 button{font:inherit;color:inherit}
 ::selection{background:var(--ink);color:var(--page)}
@@ -43,7 +50,7 @@ button{font:inherit;color:inherit}
   display:grid;
   place-items:center;
   pointer-events:none;
-  background:#111;
+  background:#000;
   transform:translateX(100%);
   will-change:transform;
 }
@@ -90,18 +97,22 @@ p{overflow-wrap:break-word}
 .lh-mark{display:block;fill:currentColor}
 .lh-mark__dot{fill:var(--accent)}
 .site-nav{display:flex;align-items:center;gap:28px;margin-left:auto;font-size:13px;font-weight:600}
-.site-nav a{display:flex;align-items:center;min-height:44px;color:var(--muted);text-underline-offset:6px}
-.site-nav a:hover,.site-nav a[aria-current="page"]{color:var(--ink);text-decoration:underline}
+.site-nav a{display:inline-flex;flex-direction:column;justify-content:center;min-height:44px;color:var(--muted);font-weight:500;transition:color 180ms ease}
+/* Reserva el ancho de la versión en negrita para que el menú no se mueva al pasar el cursor. */
+.site-nav a::after{content:attr(data-text);height:0;overflow:hidden;visibility:hidden;font-weight:750;pointer-events:none}
+.site-nav a:hover,.site-nav a[aria-current="page"]{color:var(--ink);font-weight:750}
 .site-header .theme-toggle{flex-shrink:0}
 .button{display:inline-flex;justify-content:center;align-items:center;gap:22px;min-height:48px;padding:12px 22px;border:1px solid var(--ink);font-size:13px;font-weight:600;transition:background-color 160ms,color 160ms}
 .button-primary{background:var(--ink);color:var(--page)}
 .button-primary:hover{background:var(--page);color:var(--ink)}
-.text-link{display:inline-flex;gap:14px;align-items:center;min-height:44px;font-size:13px;font-weight:600;text-underline-offset:6px}
-.text-link:hover{text-decoration:underline}
+.text-link{display:inline-flex;gap:12px;align-items:center;min-height:44px;font-size:13px;font-weight:750}
+.text-link>span{display:inline-block;transition:transform 260ms cubic-bezier(.16,1,.3,1)}
+.text-link:hover>span{transform:translateX(3px)}
 .site-footer{display:flex;justify-content:space-between;align-items:center;gap:24px;max-width:1320px;margin:auto;padding:40px 48px 32px;font-size:12px;color:var(--muted)}
 .site-footer nav{display:flex;gap:24px}
 .site-footer a{display:inline-flex;align-items:center;min-height:44px}
-.site-footer a:hover{text-decoration:underline;text-underline-offset:5px;color:var(--ink)}
+.site-footer a{transition:color 180ms ease}
+.site-footer a:hover{color:var(--ink)}
 @media(max-width:640px){
   .site-header{padding:12px 16px;gap:12px;flex-wrap:wrap}
   .brand{margin-right:auto}
@@ -116,8 +127,6 @@ p{overflow-wrap:break-word}
 }
 
 :root{--ease:cubic-bezier(.16,1,.3,1)}
-.nav-link-button{display:flex;align-items:center;min-height:44px;padding:0;border:0;background:transparent;color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;text-underline-offset:6px}
-.nav-link-button:hover{color:var(--ink);text-decoration:underline}
 .nav-talk{display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:0 15px;border:1px solid var(--ink);background:var(--ink);color:var(--page);font-size:12px;font-weight:700;line-height:1;transition:background-color 180ms var(--ease),color 180ms var(--ease)}
 .nav-talk:hover{background:transparent;color:var(--ink)}
 
@@ -126,7 +135,7 @@ html.page-entering-back .transition-stage{transform:translateX(0);animation:page
 @keyframes page-curtain-in-back{from{transform:translateX(-100%)}to{transform:translateX(0)}}
 @keyframes page-curtain-out-back{from{transform:translateX(0)}to{transform:translateX(100%)}}
 
-@media(max-width:640px){.nav-link-button{font-size:12px}.nav-talk{min-height:36px;padding:0 12px;font-size:11px}}
+@media(max-width:640px){.nav-talk{min-height:36px;padding:0 12px;font-size:11px}}
 
 /* Brand mark stays bare; the mark itself carries the identity. */
 .brand{width:44px;height:44px;justify-content:flex-start;background:transparent!important;box-shadow:none!important;border:0!important;border-radius:0!important;overflow:visible;transition:transform 360ms var(--ease)}
@@ -137,8 +146,6 @@ html.page-entering-back .transition-stage{transform:translateX(0);animation:page
 .lang-switch button{padding:5px 3px;border:0;background:transparent;color:var(--muted);font:inherit;cursor:pointer;transition:color 220ms var(--ease)}
 .lang-switch button:hover,.lang-switch button:focus-visible,.lang-switch button[aria-pressed="true"]{color:var(--ink)}
 .lang-switch span{opacity:.3}
-.project-header .lang-switch{color:color-mix(in srgb,var(--project-ink) 58%,transparent)}
-.project-header .lang-switch button[aria-pressed="true"],.project-header .lang-switch button:hover{color:var(--project-ink)}
 
 @media(max-width:640px){.lang-switch{margin-left:auto}.site-header .theme-toggle{margin-left:0}.brand{width:36px;height:44px}.brand .lh-mark{width:27px;height:27px}}
 
@@ -147,3 +154,56 @@ html.page-entering-back .transition-stage{transform:translateX(0);animation:page
 .button-wa{gap:12px;border-color:#25d366;background:#25d366;color:#0b1a10;font-weight:700;transition:background-color 180ms ease,border-color 180ms ease}
 .button-wa:hover,.button-wa:focus-visible{background:#1ebe5b;border-color:#1ebe5b;color:#0b1a10}
 .button-wa .wa-icon{width:19px;height:19px}
+
+/* ---------- Botón secundario (contorno) ---------- */
+.button-outline{min-height:44px;padding:0 18px;gap:12px;background:transparent;color:var(--ink)}
+.button-outline:hover,.button-outline:focus-visible{background:var(--ink);color:var(--page)}
+
+/* ---------- Placa de logo y flecha redonda (patrón del perfil, reutilizado en todo el sitio) ---------- */
+.logo-plate{width:60px;height:60px;flex:0 0 auto;display:grid;place-items:center;border-radius:16px;background:#fff}
+.logo-plate img{display:block;width:auto;height:58%;max-width:70%;object-fit:contain}
+
+
+html[data-theme="dark"] .logo-plate{box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+.round-arrow{display:grid;place-items:center;flex:0 0 auto;width:42px;height:42px;border-radius:50%;background:var(--ink);color:var(--page);font-size:15px;font-weight:500;transition:transform 420ms var(--ease)}
+a:hover>.round-arrow,a:focus-visible>.round-arrow{transform:translateX(4px)}
+
+/* Selector de idioma: el idioma activo va en una pastilla rellena para que se note cuál está elegido. */
+.lang-switch{position:relative;gap:2px;min-height:34px;padding:3px;border-radius:999px;background:var(--page-alt);box-shadow:inset 0 0 0 1px var(--soft-line)}
+.lang-switch span{display:none}
+.lang-switch button{min-width:34px;min-height:28px;padding:0 9px;border-radius:999px;letter-spacing:.08em;transition:color 220ms var(--ease),background-color 220ms var(--ease),box-shadow 220ms var(--ease)}
+.lang-switch button:hover{color:var(--ink)}
+.lang-switch button[aria-pressed="true"]{background:var(--ink);color:var(--page);box-shadow:0 2px 6px rgba(0,0,0,.18)}
+.lang-switch button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+/* Detalles de color en todo el sitio. */
+::selection{background:var(--sanguine);color:#fff}
+
+/* Volver arriba (main.js): aparece al bajar, en todas las páginas. */
+.to-top{position:fixed;right:clamp(16px,2.4vw,28px);bottom:clamp(16px,2.4vw,28px);z-index:60;display:grid;place-items:center;width:48px;height:48px;padding:0;border:0;border-radius:50%;background:var(--ink);color:var(--page);box-shadow:0 10px 26px -8px rgba(0,0,0,.4),0 0 0 1px color-mix(in srgb,var(--page) 35%,transparent);cursor:pointer;opacity:0;visibility:hidden;transform:translateY(10px);transition:opacity .3s ease,transform .4s cubic-bezier(.16,1,.3,1),visibility 0s linear .3s,background-color .25s ease}
+.to-top.is-visible{opacity:1;visibility:visible;transform:none;transition-delay:0s}
+.to-top:hover{background:var(--sanguine);color:#fff}
+.to-top:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.to-top svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+@media print{.to-top{display:none}}
+
+/* Menú en celular (main.js añade el botón y la clase .has-menu; sin JS, la navegación queda visible). */
+.menu-toggle{display:none}
+@media(max-width:640px){
+  .site-header.has-menu{flex-wrap:nowrap}
+  .has-menu .menu-toggle{display:inline-flex;align-items:center;gap:10px;min-height:40px;padding:0 14px;border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--ink);font:700 12px/1 var(--display);letter-spacing:.06em;cursor:pointer}
+  .menu-toggle i{position:relative;width:14px;height:10px}
+  .menu-toggle i::before,.menu-toggle i::after{content:"";position:absolute;left:0;right:0;height:1.6px;border-radius:2px;background:currentColor;transition:transform .3s cubic-bezier(.16,1,.3,1),top .3s ease}
+  .menu-toggle i::before{top:1px}
+  .menu-toggle i::after{top:7px}
+  .is-menu-open .menu-toggle i::before{top:4px;transform:rotate(45deg)}
+  .is-menu-open .menu-toggle i::after{top:4px;transform:rotate(-45deg)}
+  .has-menu .site-nav{position:absolute;top:100%;left:0;right:0;z-index:30;order:0;width:auto;flex-direction:column;align-items:stretch;gap:0;margin:0;padding:6px 16px 16px;border-top:1px solid var(--soft-line);border-bottom:1px solid var(--soft-line);background:var(--page);box-shadow:0 24px 40px -28px rgba(0,0,0,.35);font-size:16px;opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity .25s ease,transform .35s cubic-bezier(.16,1,.3,1),visibility 0s linear .25s}
+  .has-menu.is-menu-open .site-nav{opacity:1;visibility:visible;transform:none;transition-delay:0s}
+  .has-menu .site-nav a{min-height:52px;border-bottom:1px solid var(--soft-line)}
+  .has-menu .site-nav .nav-talk{width:100%;min-height:48px;margin-top:14px}
+}
+
+/* Flechas redondas: al pasar el cursor por su tarjeta o enlace se pintan en sanguina, en todo el sitio. */
+a:hover .round-arrow,a:focus-visible .round-arrow,button:hover .round-arrow,button:focus-visible .round-arrow{background:var(--sanguine);color:#fff}
+.round-arrow{transition:background-color 260ms var(--ease),color 260ms var(--ease),transform 260ms var(--ease)}

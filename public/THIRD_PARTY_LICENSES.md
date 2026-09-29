@@ -28,7 +28,7 @@ SOFTWARE.
 
 ## Fonts
 
-Bricolage Grotesque and Manrope use the SIL Open Font License. Full notices are included in fonts/bricolage-LICENSE.txt and fonts/manrope-LICENSE.txt.
+Bricolage Grotesque and Newsreader use the SIL Open Font License. Full notices are included in fonts/bricolage-LICENSE.txt and fonts/newsreader-LICENSE.txt.
 
 ## Project imagery
 All project images are screenshots of the projects themselves (their interfaces or source code). The NOOVA ERP screenshots hide client data and prices.

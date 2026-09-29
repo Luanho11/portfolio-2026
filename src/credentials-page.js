@@ -6,7 +6,7 @@ const caption = document.getElementById('credCaption');
 const titleEl = document.getElementById('credTitle');
 const subEl = document.getElementById('credSub');
 const dotsBox = document.getElementById('credDots');
-const bgLayers = [...document.querySelectorAll('.cred-bg__layer')];
+const bgLayers = [...document.querySelectorAll('.cred-bg__doc')];
 const dialog = document.getElementById('certificateDialog');
 const dialogImage = document.getElementById('certificateImage');
 const dialogTitle = document.getElementById('certificateTitle');
@@ -93,11 +93,12 @@ function layout({ instant = false } = {}) {
 }
 
 /* ---------- Título, fondo y contenido ---------- */
+/* Detrás del carrusel se ve, en grande y tenue, el documento que está al frente. */
 function setBackground(card, immediate = false) {
   const img = card.querySelector('.cred-card__media > img');
-  const src = img?.getAttribute('src') || './logos/upn.png';
   const next = bgLayers[(bgFront + 1) % bgLayers.length];
-  next.style.backgroundImage = `url("${src}")`;
+  next.src = img?.getAttribute('src') || './logos/upn.svg';
+  next.classList.toggle('is-logo', !card.dataset.img);
   next.classList.add('is-visible');
   const prev = bgLayers[bgFront];
   if (immediate) prev.classList.remove('is-visible');
