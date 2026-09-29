@@ -147,23 +147,6 @@ function startInk() {
       landing.addEventListener('touchmove', seguirDedo, { passive: true });
       landing.addEventListener('touchend', () => effect.lift(), { passive: true });
 
-      // Trazo de bienvenida: una curva lenta que cruza el hero.
-      let inicio = 0;
-      let trazoFrame = 0;
-      const duracion = 2600;
-      const trazar = (ahora) => {
-        if (!inicio) inicio = ahora;
-        const t = Math.min(1, (ahora - inicio) / duracion);
-        const r = landing.getBoundingClientRect();
-        const x = r.width * (0.08 + 0.84 * t);
-        const y = r.height * (0.8 + 0.08 * Math.sin(t * Math.PI * 2.2));
-        wakeEffect();
-        effect.trace(x, y);
-        if (t < 1) trazoFrame = requestAnimationFrame(trazar);
-        else effect.lift();
-      };
-      landing.addEventListener('touchstart', () => cancelAnimationFrame(trazoFrame), { passive: true, once: true });
-      trazoFrame = requestAnimationFrame(trazar);
     }
   }).catch(() => { canvas.hidden = true; });
 }
@@ -287,14 +270,11 @@ const COPY_EN = new Map(Object.entries({
   "Formación y certificaciones":"Education and certifications",
   "Experiencia":"Experience",
   "Responsable del área de TI":"In charge of the IT area",
-  "Estoy a cargo del área de TI: entrevisté y seleccioné a un equipo de 2 personas, reporto el avance a gerencia y defino los requerimientos, la arquitectura, los flujos y la dirección visual de cada proyecto.":"I am in charge of the IT area: I interviewed and hired a team of 2, report progress to management and define the requirements, architecture, workflows and visual direction of every project.",
+  "Lidero el área de TI: seleccioné a un equipo de 2 personas y defino los requerimientos, la arquitectura y el diseño de cada proyecto.":"I lead the IT area: I hired a team of 2 and define the requirements, architecture and design of every project.",
+  "Desarrollé la web corporativa y un ERP interno de clientes, cotizaciones y compras. En desarrollo: Noova Learn Mining, su plataforma de formación.":"I built the corporate website and an internal ERP for clients, quotations and purchasing. In progress: Noova Learn Mining, its training platform.",
+  "Construí una plataforma editorial con panel administrativo, roles y gestión de publicaciones y autores.":"I built an editorial platform with an admin panel, roles, and publication and author management.",
   "Junio 2026 — Actualidad · Lima, Perú":"June 2026 — Present · Lima, Peru",
   "Desarrollador Web Freelance":"Freelance Web Developer",
-  "Desarrollé y publiqué la web corporativa con React y TypeScript. Configuré SEO técnico, datos estructurados, dominio y Firebase Hosting.":"I developed and published the corporate website with React and TypeScript, including technical SEO, structured data, domain setup and Firebase Hosting.",
-  "Desarrollé flujos de clientes, cotizaciones y compras en un ERP interno, con permisos por rol, dashboards y generación de documentos PDF.":"I developed client, quotation and purchasing workflows in an internal ERP with role-based permissions, dashboards and PDF generation.",
-  "En desarrollo: la intranet de NOOVA (Noova Learn Mining), una plataforma de formación con registro, acceso por correo o Google y Firebase Authentication.":"In progress: the NOOVA intranet (Noova Learn Mining), a training platform with sign-up, email or Google sign-in and Firebase Authentication.",
-  "Construí una plataforma editorial con panel administrativo, autenticación, roles y gestión de publicaciones y autores.":"I built an editorial platform with an admin panel, authentication, roles, and publication and author management.",
-  "Integré Firestore, Storage y metadatos Open Graph por artículo mediante Firebase Functions.":"I integrated Firestore, Storage and per-article Open Graph metadata through Firebase Functions.",
   "Ver proyecto →":"View project →",
   "Frontend":"Frontend",
   "Backend / APIs":"Backend / APIs",
