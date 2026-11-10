@@ -266,7 +266,6 @@ const COPY_EN = new Map(Object.entries({
   "Mi experiencia":"My experience",
   "Ver servicios":"View services",
   "Learn Mining →":"Learn Mining →",
-  "Intranet →":"Intranet →",
   "Disponible para nuevas oportunidades y proyectos.":"Available for new opportunities and projects.",
   "Mi perfil.":"My profile.",
   "Formación y certificaciones":"Education and certifications",
