@@ -3,10 +3,8 @@ const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const finePointer = window.matchMedia('(pointer: fine)');
 const metaTheme = document.querySelector('meta[name="theme-color"]');
 
-/* ---------- Loader ---------- */
+/* ---------- Imágenes ---------- */
 // Cada imagen se vigila: mientras llega muestra un esqueleto animado, al llegar se funde y, si falla, se reintenta.
-// El loader cubre la página hasta que carguen todas las imágenes de la página y las visibles (con un tope), y muestra el avance real.
-const loadedEvents = [];
 function watchImage(img) {
   if (img.dataset.watched || !img.getAttribute('src')) return;
   img.dataset.watched = '1';
@@ -41,44 +39,7 @@ function watchImage(img) {
 }
 window.__watchImage = watchImage;
 
-const inView = (node) => {
-  const r = node.getBoundingClientRect();
-  return r.width > 0 && r.height > 0 && r.bottom > 0 && r.top < innerHeight && r.right > 0 && r.left < innerWidth;
-};
-const imageSettled = (img) => (img.complete ? Promise.resolve() : new Promise((resolve) => {
-  img.addEventListener('load', resolve, { once: true });
-  img.addEventListener('error', resolve, { once: true });
-}));
-// La marca se queda al menos este tiempo (desde que empezó la navegación) para que la entrada se sienta pausada y no parpadee.
-const LOADER_MIN = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 150 : 450;
-const LOADER_MAX = 2500;
-async function finishLoading() {
-  if (!root.classList.contains('is-loading')) return;
-  try {
-    // Solo espera a las imágenes que se ven al abrir la página y a las fuentes, con un tope corto.
-    // Las demás llegan después con su esqueleto animado.
-    const limit = new Promise((resolve) => setTimeout(resolve, LOADER_MAX));
-    const ready = (async () => {
-      const visible = [...document.images].filter((img) => img.getAttribute('src') && inView(img));
-      await Promise.all([...visible.map(imageSettled), document.fonts?.ready]);
-    })();
-    await Promise.race([ready, limit]);
-    const remaining = LOADER_MIN - performance.now();
-    if (remaining > 0) await new Promise((resolve) => setTimeout(resolve, remaining));
-  } finally {
-    window.__portfolioReady = true;
-    window.__portfolioReadyAt = Math.round(performance.now());
-    root.classList.remove('is-loading', 'loader-fresh');
-    root.classList.add('loader-out');
-    window.dispatchEvent(new Event('portfolio-ready'));
-    setTimeout(() => root.classList.remove('loader-out'), 650);
-  }
-}
 document.querySelectorAll('img').forEach(watchImage);
-finishLoading();
-window.addEventListener('pageshow', (event) => {
-  if (event.persisted) root.classList.remove('is-loading', 'loader-out');
-});
 
 function updateTheme() {
   const dark = root.dataset.theme === 'dark';

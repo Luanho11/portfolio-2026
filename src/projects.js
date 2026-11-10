@@ -149,8 +149,7 @@ function renderCopy() {
 // Los paneles se revelan cuando sus imágenes ya cargaron, así la animación no muestra cajas vacías.
 // Solo una imagen que falla de verdad marca el panel como roto; decode() también falla con imágenes diferidas de paneles ocultos.
 const cardImages = cards.map((card) => card.querySelector('img').decode().catch(() => {}));
-const afterLoader = (fn) => (window.__portfolioReady ? fn() : window.addEventListener('portfolio-ready', fn, { once: true }));
-Promise.race([Promise.all(cardImages), wait(900)]).then(() => afterLoader(() => rack.classList.add('is-ready')));
+Promise.race([Promise.all(cardImages), wait(900)]).then(() => rack.classList.add('is-ready'));
 
 /* ---------- Hover / foco (acordeón estable) ---------- */
 function setHot(index) {
@@ -656,7 +655,7 @@ window.addEventListener('portfolio-language-change', renderCopy);
 renderCopy();
 const fromHash = cards.findIndex((card) => `#${card.dataset.id}` === location.hash);
 setGroup(fromHash >= 0 ? groupOf(cards[fromHash]) : 'work');
-afterLoader(() => requestAnimationFrame(() => document.querySelector('.reel-intro').classList.add('is-in')));
+requestAnimationFrame(() => document.querySelector('.reel-intro').classList.add('is-in'));
 if (fromHash >= 0) openProject(fromHash, { instant: true });
 
 /* Botón "volver arriba" (main.js) con el detalle abierto: sube dentro del detalle. */
