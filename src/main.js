@@ -50,28 +50,28 @@ const imageSettled = (img) => (img.complete ? Promise.resolve() : new Promise((r
   img.addEventListener('error', resolve, { once: true });
 }));
 // La marca se queda al menos este tiempo (desde que empezó la navegación) para que la entrada se sienta pausada y no parpadee.
-const LOADER_MIN = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 300 : 1100;
+const LOADER_MIN = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 150 : 450;
+const LOADER_MAX = 2500;
 async function finishLoading() {
   if (!root.classList.contains('is-loading')) return;
   try {
-    const limit = new Promise((resolve) => setTimeout(resolve, 9000));
+    // Solo espera a las imágenes que se ven al abrir la página y a las fuentes, con un tope corto.
+    // Las demás llegan después con su esqueleto animado.
+    const limit = new Promise((resolve) => setTimeout(resolve, LOADER_MAX));
     const ready = (async () => {
-      const tracked = [...document.images].filter((img) => img.getAttribute('src') && (img.loading !== 'lazy' || inView(img)));
-      await Promise.all([
-        ...tracked.map(imageSettled),
-        document.readyState === 'complete' ? Promise.resolve() : new Promise((resolve) => window.addEventListener('load', resolve, { once: true })),
-        document.fonts?.ready,
-      ]);
+      const visible = [...document.images].filter((img) => img.getAttribute('src') && inView(img));
+      await Promise.all([...visible.map(imageSettled), document.fonts?.ready]);
     })();
     await Promise.race([ready, limit]);
     const remaining = LOADER_MIN - performance.now();
     if (remaining > 0) await new Promise((resolve) => setTimeout(resolve, remaining));
   } finally {
     window.__portfolioReady = true;
+    window.__portfolioReadyAt = Math.round(performance.now());
     root.classList.remove('is-loading', 'loader-fresh');
     root.classList.add('loader-out');
     window.dispatchEvent(new Event('portfolio-ready'));
-    setTimeout(() => root.classList.remove('loader-out'), 1100);
+    setTimeout(() => root.classList.remove('loader-out'), 650);
   }
 }
 document.querySelectorAll('img').forEach(watchImage);
