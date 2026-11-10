@@ -20,12 +20,12 @@ const UI = {
   es: {
     back: 'Proyectos', more: 'Ver detalles', gallery: 'Capturas', wins: 'Qué construí',
     ctaTitle: 'Cotiza algo similar', ctaButton: 'Escríbeme por WhatsApp', problem: 'Problema', solution: 'Solución', before: 'Antes', after: 'Ahora', approx: 'Aproximado', mode: 'Versión del sitio',
-    heading: 'Proyectos', work: 'Profesionales', academic: 'Técnicos', zoom: 'Ampliar', prev: 'Captura anterior', nextShot: 'Captura siguiente',
+    heading: 'Proyectos', work: 'Profesionales', academic: 'Técnicos', personal: 'Personales', other: 'Otros', zoom: 'Ampliar', prev: 'Captura anterior', nextShot: 'Captura siguiente',
   },
   en: {
     back: 'Projects', more: 'View details', gallery: 'Screenshots', wins: 'What I built',
     ctaTitle: 'Get a quote for something similar', ctaButton: 'Message me on WhatsApp', problem: 'The problem', solution: 'The solution', before: 'Before', after: 'Now', approx: 'Approximate', mode: 'Site version',
-    heading: 'Projects', work: 'Professional', academic: 'Technical', zoom: 'Enlarge', prev: 'Previous screenshot', nextShot: 'Next screenshot',
+    heading: 'Projects', work: 'Professional', academic: 'Technical', personal: 'Personal', other: 'Other', zoom: 'Enlarge', prev: 'Previous screenshot', nextShot: 'Next screenshot',
   },
 };
 // Curva suave al inicio y al final; duración corta para llegar rápido al contenido.
@@ -44,6 +44,33 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 const text = (card, key) => card.dataset[key + (lang() === 'en' ? 'En' : 'Es')] || card.dataset[`${key}Es`] || '';
 const list = (value) => (value || '').split('|').map((s) => s.trim()).filter(Boolean);
 const nextFrame = () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+/* ---------- Categorías: cada una muestra solo sus paneles ---------- */
+const filter = document.getElementById('reelFilter');
+const filterButtons = [...filter.querySelectorAll('[data-group]')];
+const groupOf = (card) => card.closest('.reel-item').dataset.group;
+const visibleCards = () => cards.filter((card) => !card.closest('.reel-item').hidden);
+filterButtons.forEach((button) => {
+  button.querySelector('small').textContent = String(cards.filter((card) => groupOf(card) === button.dataset.group).length);
+});
+function setGroup(group) {
+  filterButtons.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.group === group)));
+  let k = 0;
+  items.forEach((item, i) => {
+    const show = item.dataset.group === group;
+    item.hidden = !show;
+    if (show) cards[i].style.setProperty('--i', String(k++));
+  });
+  rack.scrollLeft = 0;
+  hot = -1;
+  cards.forEach((card) => card.classList.remove('is-hot'));
+  rack.classList.remove('has-hot');
+  renderInfo(compact.matches ? cards.indexOf(visibleCards()[0]) : -1, false);
+}
+filterButtons.forEach((button) => button.addEventListener('click', () => {
+  if (isOpen || busy || button.getAttribute('aria-pressed') === 'true') return;
+  setGroup(button.dataset.group);
+}));
 
 /* ---------- Scroll suave del detalle ---------- */
 const lenis = new Lenis({
@@ -150,8 +177,9 @@ cards.forEach((card, i) => {
   card.addEventListener('keydown', (event) => {
     if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
     event.preventDefault();
-    const next = (i + (event.key === 'ArrowRight' ? 1 : -1) + cards.length) % cards.length;
-    cards[next].focus();
+    const shown = visibleCards();
+    const at = shown.indexOf(card);
+    shown[(at + (event.key === 'ArrowRight' ? 1 : -1) + shown.length) % shown.length].focus();
   });
 });
 
@@ -166,6 +194,7 @@ rack.addEventListener('scroll', () => {
     let best = -1;
     let bestDist = Infinity;
     cards.forEach((card, i) => {
+      if (card.closest('.reel-item').hidden) return;
       const r = card.getBoundingClientRect();
       const dist = Math.abs(r.left + r.width / 2 - anchor);
       if (dist < bestDist) { bestDist = dist; best = i; }
@@ -368,6 +397,7 @@ function fillDetail(index, { rebuildGallery = true } = {}) {
   el('detailPrivate').hidden = Boolean(href);
   if (href) { link.href = href; el('detailCta').textContent = text(card, 'cta'); }
   else el('detailPrivateText').textContent = text(card, 'cta');
+  el('detailGallery').hidden = !card.dataset.gallery;
   if (rebuildGallery) buildGallery(card);
   else {
     syncMode(card, galleryMode);
@@ -611,6 +641,7 @@ window.addEventListener('keydown', (event) => {
 window.addEventListener('hashchange', () => {
   const index = cards.findIndex((card) => `#${card.dataset.id}` === location.hash);
   if (index < 0) return;
+  setGroup(groupOf(cards[index]));
   if (isOpen) switchProject(index);
   else openProject(index);
 });
@@ -619,10 +650,9 @@ window.addEventListener('portfolio-language-change', renderCopy);
 
 /* ---------- Inicio ---------- */
 renderCopy();
-// En móvil no hay cursor: la ficha empieza describiendo el primer panel.
-if (compact.matches) renderInfo(0, false);
-requestAnimationFrame(() => document.querySelector('.reel-intro').classList.add('is-in'));
 const fromHash = cards.findIndex((card) => `#${card.dataset.id}` === location.hash);
+setGroup(fromHash >= 0 ? groupOf(cards[fromHash]) : 'work');
+requestAnimationFrame(() => document.querySelector('.reel-intro').classList.add('is-in'));
 if (fromHash >= 0) openProject(fromHash, { instant: true });
 
 /* Botón "volver arriba" (main.js) con el detalle abierto: sube dentro del detalle. */

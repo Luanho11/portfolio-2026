@@ -33,6 +33,20 @@ Cada panel de `projects.html` es un `<button class="reel-card">` con sus textos 
 - Al final del detalle hay un CTA a WhatsApp con el nombre del proyecto ya escrito en el mensaje.
 - Se puede abrir un proyecto directamente con su id en la URL, por ejemplo `projects.html#noova`.
 
+### Categorías y capturas
+
+- Cada `<li class="reel-item">` lleva `data-group="work|tech|personal|other"`. Los botones de `#reelFilter` muestran un grupo a la vez (con su contador); `src/projects.js` (`setGroup`) oculta el resto. Los deep links (`projects.html#jarvis`) abren la categoría correcta. Para añadir una ficha, ponla en su grupo; el contador se calcula solo.
+- Las etiquetas de los botones están en `UI` de `src/projects.js`.
+- Capturas: reales cuando existen. Las imágenes marcadas «Esquema referencial» (NOOVA Intranet, XARA, SUMI, Jarvis y Proyecto Clínica) son diagramas hechos con el estilo del sitio para ocupar el lugar de una captura mientras se consiguen las reales; no son capturas del software. Cuando tengas las reales, súbelas a `public/projects/gallery/` y reemplaza `data-hero`, `data-gallery`, `data-captions-*` y la imagen del panel.
+
+### Capturas reales pendientes
+
+NOOVA Intranet, XARA, SUMI, Jarvis y Proyecto Clínica (hoy con esquema referencial); además, más capturas de NVS (edición y exportación) y de ERP NOOVA (PDF).
+
+## Tecnologías en el perfil
+
+En `about.html`, el stack principal está en `.stack-rows`. El bloque plegable «Otras tecnologías y conocimientos» (`<details class="stack-extra">`) agrupa el resto en `<section class="stack-group">` con un icono SVG por categoría y una lista `<ul class="stack-tags">`. Está cerrado por defecto: la barra «Ver todo +» lo despliega. Para añadir una tecnología, agrega un `<li>` al grupo correspondiente sin repetir nombres, y si el texto está en español añade su traducción en `COPY_EN` (`src/main.js`).
+
 ## Menú en celular
 
 En pantallas de hasta 640 px, la cabecera queda en una sola fila y la navegación se abre con el botón "Menú" (lo agrega `src/main.js`; sin JavaScript la navegación se ve completa).
@@ -43,7 +57,7 @@ Cuatro preguntas cerradas por defecto (`<details>`), antes del llamado final. Si
 
 ## CV
 
-`public/LUIS-HOSTOS-CV.pdf` es el CV de una página. Los certificados van en un PDF aparte, fuera del sitio.
+`public/LUIS-HOSTOS-CV.pdf` es el CV de una página. Los certificados y documentos académicos se muestran en `credentials.html` desde `public/certificates/` (ver «Formación y certificaciones»).
 
 ## Volver arriba
 

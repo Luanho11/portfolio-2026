@@ -46,7 +46,7 @@
 .reel-rack{
   --pw:clamp(76px,9.25cqw,154px);
   position:absolute;
-  inset:clamp(96px,16cqh,150px) 0 clamp(118px,18cqh,160px);
+  inset:clamp(132px,22cqh,184px) 0 clamp(118px,18cqh,160px);
   margin:0;
   padding:0 clamp(18px,2.2cqw,34px);
   list-style:none;
@@ -341,12 +341,14 @@ html[data-theme="dark"] .shots{--mat:#161616;--frame:rgba(255,255,255,.16)}
 .reel-detail.is-revealed .reel-about,
 .reel-detail.is-revealed .reel-cta{opacity:1}
 
+.reel-gallery[hidden]{display:none}
+
 /* ---------- Móvil ---------- */
 @media (max-width:720px){
   .reel-intro__title{font-size:clamp(38px,12cqw,52px)}
   .reel-rack{
     --pw:clamp(118px,38cqw,170px);
-    inset:clamp(84px,14cqh,120px) 0 clamp(150px,25cqh,190px);
+    inset:clamp(118px,19cqh,150px) 0 clamp(150px,25cqh,190px);
     justify-content:flex-start;
     gap:8px;
     padding:0 16px;
@@ -507,3 +509,15 @@ html[data-theme="dark"] .reel-gallery{background:#0d0d0c}
 .reel-outcome .reel-metric{flex-direction:column;align-items:flex-start;gap:14px;margin-top:clamp(40px,5cqh,56px);padding:clamp(22px,2.4cqw,32px);border-radius:22px;background:var(--page-alt)}
 .reel-outcome .reel-metric[hidden]{display:none}
 @media (max-width:900px){.reel-outcome{grid-template-columns:1fr}.reel-outcome .reel-metric{margin-top:0}}
+
+/* ---------- Categorías ---------- */
+.reel-item[hidden]{display:none}
+.reel-intro{flex-direction:column;align-items:center;gap:clamp(4px,1.2cqh,12px)}
+.reel-filter{display:flex;justify-content:center;gap:clamp(14px,2.4cqw,34px);pointer-events:auto}
+.reel-filter button{display:inline-flex;align-items:baseline;gap:6px;padding:6px 2px;border:0;border-bottom:1px solid transparent;background:none;color:var(--muted);font:italic 400 clamp(15px,1.3cqw,19px)/1.2 var(--serif);cursor:pointer;transition:color .25s ease,border-color .25s ease}
+.reel-filter button small{font:600 11px/1 var(--display);letter-spacing:.04em;opacity:.65}
+.reel-filter button:hover{color:var(--ink)}
+.reel-filter button[aria-pressed="true"]{color:var(--ink);border-bottom-color:currentColor}
+.reel-filter button:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-radius:4px}
+.reel-stage.is-detail .reel-filter{pointer-events:none}
+@media (max-width:720px){.reel-filter{gap:14px}.reel-filter button{font-size:15px}}
