@@ -226,8 +226,21 @@ html{overscroll-behavior-y:none;-webkit-tap-highlight-color:transparent}
 .is-magnetic,.identity-inner{will-change:transform;backface-visibility:hidden}
 
 /* ---------- Loader: mismo negro y marca LH que la cortina de transición ---------- */
+@property --load{syntax:'<number>';inherits:true;initial-value:0}
+html{--load:0}
 html.is-loading{overflow:hidden}
-html.is-loading::after,html.loader-out::after{content:"";position:fixed;inset:0;z-index:1000;background:#000}
+html.is-loading::after,html.loader-out::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  /* Barra de avance real: crece desde el centro según las imágenes que ya llegaron. */
+  background:
+    linear-gradient(#8fc6c7,#8fc6c7) 50% calc(50% + 46px)/calc(var(--load) * 1.4px) 3px no-repeat,
+    linear-gradient(rgba(255,255,255,.22),rgba(255,255,255,.22)) 50% calc(50% + 46px)/140px 3px no-repeat,
+    #000;
+  transition:background-size .45s ease;
+}
 html.is-loading::before,html.loader-out::before{
   content:"";
   position:fixed;
@@ -239,26 +252,27 @@ html.is-loading::before,html.loader-out::before{
   margin:-22px 0 0 -22px;
   background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath fill='%23f7f7f5' d='M5 6h5v23h9v5H5V6Zm17 0h5v10h8V6h5v28h-5V21h-8v13h-5V6Z'/%3E%3Crect fill='%238fc6c7' x='17' y='29' width='3' height='5'/%3E%3C/svg%3E") center/contain no-repeat;
 }
-/* La marca aparece solo si la carga tarda: en cargas rápidas no se llega a ver. */
-html.is-loading::before{opacity:0;animation:loader-mark 1.5s ease-in-out .2s infinite}
+/* La marca y la barra aparecen apenas empieza la carga y laten mientras dura. */
+html.is-loading::before{animation:loader-mark 1.5s ease-in-out infinite}
 html.loader-out::after{animation:loader-fade .55s ease forwards;pointer-events:none}
 html.loader-out::before{animation:loader-fade-mark .45s ease forwards;pointer-events:none}
-@keyframes loader-mark{0%,100%{opacity:.3;transform:scale(.94)}50%{opacity:1;transform:scale(1)}}
+@keyframes loader-mark{0%,100%{opacity:.35;transform:scale(.94)}50%{opacity:1;transform:scale(1)}}
 @keyframes loader-fade{to{opacity:0}}
 @keyframes loader-fade-mark{from{opacity:1}to{opacity:0;transform:scale(1.06)}}
 /* Las animaciones de entrada esperan a que el loader termine. */
 html.is-loading body *,html.is-loading body *::before,html.is-loading body *::after{animation-play-state:paused!important}
-/* Imágenes que llegan tarde: aparecen con un fundido en lugar de saltar. */
-img.img-wait{opacity:0}
-img.img-fade{transition:opacity .55s ease}
+
+/* Imágenes: esqueleto animado mientras llegan, fundido al aparecer, reintento automático si fallan. */
+@keyframes img-shimmer{from{background-position:140% 0}to{background-position:-40% 0}}
+@keyframes img-in{from{opacity:0}to{opacity:1}}
+img.img-wait{color:transparent;background:linear-gradient(110deg,#171a1d 30%,#2b3136 50%,#171a1d 70%) 0 0/250% 100%;animation:img-shimmer 1.6s linear infinite}
+img.img-in{animation:img-in .55s ease}
+img.img-failed{opacity:0}
+.reel-card__media:has(img.img-failed){background:linear-gradient(160deg,#3a4146,#15181b)}
+.shot__frame:has(img.img-wait)::before{content:"";position:absolute;inset:6% 4%;border-radius:12px;background:linear-gradient(110deg,#171a1d 30%,#2b3136 50%,#171a1d 70%) 0 0/250% 100%;animation:img-shimmer 1.6s linear infinite}
 @media (prefers-reduced-motion:reduce){
   html.is-loading::before{animation:none;opacity:1}
   html.loader-out::after,html.loader-out::before{animation-duration:.01s}
-  img.img-fade{transition:none}
+  img.img-wait,.shot__frame:has(img.img-wait)::before{animation:none}
+  img.img-in{animation:none}
 }
-
-/* Mientras llega una imagen se ve un esqueleto suave, no un hueco vacío. */
-@keyframes img-shimmer{from{background-position:140% 0}to{background-position:-40% 0}}
-.reel-card__media:has(img.img-wait){background:linear-gradient(110deg,#171a1d 30%,#2b3136 50%,#171a1d 70%) 0 0/250% 100%;animation:img-shimmer 1.6s linear infinite}
-.shot__frame:has(img.img-wait)::before{content:"";position:absolute;inset:6% 4%;border-radius:12px;background:linear-gradient(110deg,#171a1d 30%,#2b3136 50%,#171a1d 70%) 0 0/250% 100%;animation:img-shimmer 1.6s linear infinite}
-@media (prefers-reduced-motion:reduce){.reel-card__media:has(img.img-wait),.shot__frame:has(img.img-wait)::before{animation:none}}

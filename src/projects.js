@@ -148,7 +148,6 @@ function renderCopy() {
 
 // Los paneles se revelan cuando sus imágenes ya cargaron, así la animación no muestra cajas vacías.
 // Solo una imagen que falla de verdad marca el panel como roto; decode() también falla con imágenes diferidas de paneles ocultos.
-cards.forEach((card) => card.querySelector('img').addEventListener('error', () => card.classList.add('is-broken')));
 const cardImages = cards.map((card) => card.querySelector('img').decode().catch(() => {}));
 const afterLoader = (fn) => (window.__portfolioReady ? fn() : window.addEventListener('portfolio-ready', fn, { once: true }));
 Promise.race([Promise.all(cardImages), wait(900)]).then(() => afterLoader(() => rack.classList.add('is-ready')));
@@ -228,13 +227,8 @@ function shotImage(src, alt, className) {
   img.decoding = 'async';
   img.draggable = false;
   if (className) img.className = className;
-  // Las capturas se funden al llegar en lugar de aparecer de golpe.
-  if (!img.complete) {
-    img.classList.add('img-wait', 'img-fade');
-    const show = () => img.classList.remove('img-wait');
-    img.addEventListener('load', show, { once: true });
-    img.addEventListener('error', show, { once: true });
-  }
+  // Las capturas se funden al llegar y se reintentan si fallan.
+  window.__watchImage?.(img);
   return img;
 }
 

@@ -4,7 +4,43 @@ const finePointer = window.matchMedia('(pointer: fine)');
 const metaTheme = document.querySelector('meta[name="theme-color"]');
 
 /* ---------- Loader ---------- */
-// Termina cuando cargaron la página y las imágenes que están a la vista (con un tope), para que nada aparezca a saltos.
+// Cada imagen se vigila: mientras llega muestra un esqueleto animado, al llegar se funde y, si falla, se reintenta.
+// El loader cubre la página hasta que carguen todas las imágenes de la página y las visibles (con un tope), y muestra el avance real.
+const loadedEvents = [];
+function watchImage(img) {
+  if (img.dataset.watched || !img.getAttribute('src')) return;
+  img.dataset.watched = '1';
+  const original = img.getAttribute('src');
+  const isIcon = Number(img.getAttribute('width')) > 0 && Number(img.getAttribute('width')) < 40;
+  let tries = 0;
+  const show = () => {
+    img.classList.remove('img-wait', 'img-failed');
+    if (!isIcon) {
+      img.classList.add('img-in');
+      setTimeout(() => img.classList.remove('img-in', 'img-fade'), 700);
+    }
+  };
+  const retry = () => {
+    if (tries < 3) {
+      tries += 1;
+      if (!isIcon) img.classList.add('img-wait');
+      setTimeout(() => { img.src = `${original}${original.includes('?') ? '&' : '?'}r=${tries}`; }, 1200 * tries);
+    } else {
+      img.classList.remove('img-wait');
+      img.classList.add('img-failed');
+    }
+  };
+  if (!isIcon) img.classList.add('img-fade');
+  if (img.complete) {
+    if (img.naturalWidth === 0) retry();
+  } else if (!isIcon) {
+    img.classList.add('img-wait');
+  }
+  img.addEventListener('load', show);
+  img.addEventListener('error', retry);
+}
+window.__watchImage = watchImage;
+
 const inView = (node) => {
   const r = node.getBoundingClientRect();
   return r.width > 0 && r.height > 0 && r.bottom > 0 && r.top < innerHeight && r.right > 0 && r.left < innerWidth;
@@ -15,31 +51,33 @@ const imageSettled = (img) => (img.complete ? Promise.resolve() : new Promise((r
 }));
 async function finishLoading() {
   if (!root.classList.contains('is-loading')) return;
-  const limit = new Promise((resolve) => setTimeout(resolve, 5000));
-  const ready = (async () => {
-    if (document.readyState !== 'complete') await new Promise((resolve) => window.addEventListener('load', resolve, { once: true }));
-    if (document.fonts?.ready) await document.fonts.ready;
-    await Promise.all([...document.images].filter(inView).map(imageSettled));
-  })();
-  await Promise.race([ready, limit]);
-  window.__portfolioReady = true;
-  root.classList.remove('is-loading');
-  root.classList.add('loader-out');
-  window.dispatchEvent(new Event('portfolio-ready'));
-  setTimeout(() => root.classList.remove('loader-out'), 650);
+  try {
+    const limit = new Promise((resolve) => setTimeout(resolve, 9000));
+    const ready = (async () => {
+      const tracked = [...document.images].filter((img) => img.getAttribute('src') && (img.loading !== 'lazy' || inView(img)));
+      let done = 0;
+      const total = tracked.length + 1;
+      const progress = () => root.style.setProperty('--load', String(Math.round((done / total) * 100)));
+      progress();
+      const jobs = tracked.map((img) => imageSettled(img).then(() => { done += 1; progress(); }));
+      jobs.push((document.readyState === 'complete' ? Promise.resolve() : new Promise((resolve) => window.addEventListener('load', resolve, { once: true })))
+        .then(() => (document.fonts?.ready || null)).then(() => { done += 1; progress(); }));
+      await Promise.all(jobs);
+    })();
+    await Promise.race([ready, limit]);
+  } finally {
+    root.style.setProperty('--load', '100');
+    window.__portfolioReady = true;
+    root.classList.remove('is-loading');
+    root.classList.add('loader-out');
+    window.dispatchEvent(new Event('portfolio-ready'));
+    setTimeout(() => root.classList.remove('loader-out'), 650);
+  }
 }
+document.querySelectorAll('img').forEach(watchImage);
 finishLoading();
 window.addEventListener('pageshow', (event) => {
   if (event.persisted) root.classList.remove('is-loading', 'loader-out');
-});
-
-// Las imágenes que aún no llegaron arrancan invisibles y se funden al cargar.
-document.querySelectorAll('img').forEach((img) => {
-  if (img.complete) return;
-  img.classList.add('img-wait', 'img-fade');
-  const show = () => img.classList.remove('img-wait');
-  img.addEventListener('load', show, { once: true });
-  img.addEventListener('error', show, { once: true });
 });
 
 function updateTheme() {
