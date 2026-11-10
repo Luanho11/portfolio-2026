@@ -1,95 +1,24 @@
-# Luis Hostos — Portfolio web
+# Portafolio de Luis Hostos
 
-Portfolio de Luis Hostos: landing con efecto de tinta, proyectos con capturas reales, perfil con stack ligado a proyectos y servicios para empresas. Selector ES/EN.
+Mi portafolio: https://luanho11.github.io/portfolio-2026/
 
-## Ejecutar
+Es el lugar donde reúno lo que he construido: sitios web para empresas, un ERP interno, proyectos técnicos y proyectos personales. También muestra mi perfil, las tecnologías que uso, los servicios que ofrezco y mis estudios y certificados.
 
-```bash
-npm install
-npm run dev
-```
+## Qué encontrarás
 
-## Publicar en GitHub Pages
+- **Proyectos.** Cada proyecto tiene su ficha con el problema que resolvía, cómo lo resolví, lo que construí y capturas. Están agrupados en profesionales, técnicos, personales y otros.
+- **Perfil.** Mi experiencia, el stack que uso a diario y una lista más amplia de tecnologías y conocimientos.
+- **Servicios.** Lo que puedo hacer para una empresa y cómo trabajo.
+- **Formación.** Mis estudios y certificados, con los documentos.
 
-GitHub Pages **no puede servir el código fuente directamente**: las imágenes viven en `public/` y el JS importa paquetes de npm (`lenis`), así que hay que compilar. Si Pages publica la rama tal cual, las capturas dan 404, la página de proyectos no arranca y todo carga sin optimizar (esa era la causa de las imágenes rotas y la lentitud).
+El sitio está en español e inglés y se puede ver en modo claro u oscuro.
 
-El flujo `.github/workflows/deploy.yml` compila y publica en cada `push` a `main`:
+## Sobre las capturas
 
-1. En el repo: **Settings → Pages → Build and deployment → Source: GitHub Actions** (una sola vez; si dice "Deploy from a branch", está mal).
-2. Haz `push` a `main` (o en **Actions → Publicar en GitHub Pages → Run workflow**). Al terminar, el sitio queda actualizado.
-3. Comprobación rápida: `https://luanho11.github.io/portfolio-2026/src/main.js` debe dar 404; si muestra código, Pages sigue sirviendo la rama.
+Las capturas son de los proyectos funcionando. Cuando un proyecto es privado o todavía no tiene una pantalla que mostrar, uso un esquema y está indicado como "Esquema referencial" en la imagen.
 
-Para probar el resultado en local: `npm run build && npm run preview`.
+## Cómo está hecho
 
-## Proyectos
+Es una web estática hecha a mano con HTML, CSS y JavaScript, sin plantillas ni frameworks, para que cargue rápido y se vea como la diseñé. Los textos en inglés y español, los iconos y las fuentes viven dentro del propio proyecto, sin depender de servicios externos.
 
-Cada panel de `projects.html` es un `<button class="reel-card">` con sus textos en atributos `data-*` (ES/EN):
-`data-title-*`, `data-label-*`, `data-kicker-*`, `data-context-*` (empresa/tipo y año), `data-desc-*` (la línea que aparece bajo los paneles al pasar el cursor), `data-problem-*` y `data-solution-*` (bloques negro y blanco del detalle), `data-wins-*` (separados por `|`), `data-metric-*` y `data-metric-label-*` (opcional: resultado en cifras, se muestra como aproximado), `data-before` y `data-before-captions-*` (opcional: capturas del sitio anterior; activan los botones Antes / Ahora del carrusel), `data-cta-*`, `data-href` y `data-tech`.
-
-- La imagen del `<img>` es la del panel. Si el panel usa una captura vertical (móvil), `data-hero` indica la captura de escritorio para el banner del detalle; en móvil el detalle usa la del panel.
-- `data-gallery` lista las diapositivas del carrusel separadas por `|` (todas locales, en `public/projects/`). Una diapositiva `escritorio.webp+movil.webp` muestra la versión móvil superpuesta a la de escritorio. `data-captions-es` / `data-captions-en` describen cada diapositiva en el mismo orden (se usan como texto alternativo). Se navega con flechas, teclado, arrastre, trackpad o miniaturas, y un clic amplía la captura.
-- Los proyectos técnicos usan un afiche propio en el panel (`*-card.webp`: esquema de endpoints, flujo de autenticación o capturas reales) y su versión horizontal como banner y primera diapositiva.
-- Los proyectos profesionales van en `<li class="reel-item reel-item--featured">` (más grandes); los técnicos en `reel-item`.
-- Al final del detalle hay un CTA a WhatsApp con el nombre del proyecto ya escrito en el mensaje.
-- Se puede abrir un proyecto directamente con su id en la URL, por ejemplo `projects.html#noova`.
-
-### Categorías y capturas
-
-- Cada `<li class="reel-item">` lleva `data-group="work|tech|personal|other"`. Los botones de `#reelFilter` muestran un grupo a la vez (con su contador); `src/projects.js` (`setGroup`) oculta el resto. Los deep links (`projects.html#jarvis`) abren la categoría correcta. Para añadir una ficha, ponla en su grupo; el contador se calcula solo.
-- Las etiquetas de los botones están en `UI` de `src/projects.js`.
-- Capturas: reales cuando existen. Las imágenes marcadas «Esquema referencial» (NOOVA Intranet, XARA, SUMI, Jarvis y Proyecto Clínica) son diagramas hechos con el estilo del sitio para ocupar el lugar de una captura mientras se consiguen las reales; no son capturas del software. Cuando tengas las reales, súbelas a `public/projects/gallery/` y reemplaza `data-hero`, `data-gallery`, `data-captions-*` y la imagen del panel.
-
-### Capturas reales pendientes
-
-NOOVA Intranet, XARA, SUMI, Jarvis y Proyecto Clínica (hoy con esquema referencial); además, más capturas de NVS (edición y exportación) y de ERP NOOVA (PDF).
-
-## Tecnologías en el perfil
-
-En `about.html`, el stack principal está en `.stack-rows`. El bloque plegable «Otras tecnologías y conocimientos» (`<details class="stack-extra">`) agrupa el resto en `<section class="stack-group">` con un icono SVG por categoría y una lista `<ul class="stack-tags">`. Está cerrado por defecto: la barra «Ver todo +» lo despliega. Para añadir una tecnología, agrega un `<li>` al grupo correspondiente sin repetir nombres, y si el texto está en español añade su traducción en `COPY_EN` (`src/main.js`).
-
-## Menú en celular
-
-En pantallas de hasta 640 px, la cabecera queda en una sola fila y la navegación se abre con el botón "Menú" (lo agrega `src/main.js`; sin JavaScript la navegación se ve completa).
-
-## Servicios: preguntas frecuentes
-
-Cuatro preguntas cerradas por defecto (`<details>`), antes del llamado final. Sin precios.
-
-## CV
-
-`public/LUIS-HOSTOS-CV.pdf` es el CV de una página. Los certificados y documentos académicos se muestran en `credentials.html` desde `public/certificates/` (ver «Formación y certificaciones»).
-
-## Volver arriba
-
-En todas las páginas aparece un botón abajo a la derecha al bajar (el menú no es fijo). Con un proyecto abierto, sube dentro del detalle. Código en `src/main.js`.
-
-## Traducciones
-
-El inglés se aplica con el mapa `COPY_EN` de `src/main.js`, que busca el texto en español exacto. Si editas una frase, actualiza también su clave en `COPY_EN`. En `npm run dev`, la consola avisa con `[i18n] Falta traducción EN` cuando un texto en español queda sin traducir.
-
-## Iconos y fuentes
-
-Los iconos de tecnologías están en `public/icons/` (Simple Icons, CC0) y se muestran con el color de cada marca. Las fuentes se sirven desde `src/fonts/` (SIL OFL), sin CDN: **Bricolage Grotesque** para títulos e interfaz y **Newsreader** (reducida a peso 400 y a los caracteres de español/inglés) para el texto de lectura y las etiquetas en cursiva.
-
-## Formación y certificaciones
-
-`credentials.html` es un carrusel 3D: cada `<button class="cred-card">` define su título (`data-t-es`/`data-t-en`, líneas separadas por `|`), subtítulo (`data-s-*`), etiqueta (`data-tag-*`) e imagen (`data-img`). Detrás del carrusel se ve, grande y tenue, el documento que está al frente. Se navega con flechas, teclado, arrastre o los puntos; al hacer clic en la tarjeta central se abre el certificado.
-
-El scroll del detalle de proyectos usa [Lenis](https://github.com/darkroomengineering/lenis) (incluido en `package.json`).
-
-## Inicio: efectos al bajar
-
-- **Proyectos destacados:** en escritorio la captura queda fija en el centro de la pantalla mientras los textos pasan a su lado; al llegar al siguiente proyecto, la captura se funde con la nueva. Empieza alineada con el primer proyecto y termina alineada con el último. Los textos entran desenfocados desde abajo y se desenfocan al salir por arriba (`data-letter-fx`). En móvil cada captura va con su texto. Código en `src/home.js`.
-- Todo sigue al scroll con inercia y no se anima con "reducir movimiento".
-
-## Servicios: detalles
-
-Sin título grande: una etiqueta "Servicios" con un punto de color, iconos de línea en las pestañas y en los pasos de "Cómo trabajo".
-
-## Color
-
-Además del negro y el verde azulado (`--accent`), el sitio usa un tono sanguina (`--sanguine`) en detalles: el punto final de los títulos del inicio, la empresa de cada proyecto, las flechas al pasar el cursor y los iconos de Servicios.
-
-## Logos
-
-Isotipos sin placa en `public/logos/`: `noova-mark.webp` y `deriva-mark.webp` (sacados de los sitios oficiales), `upn.svg` y `cibertec-mark.svg` (de los logos oficiales en SVG).
+Se publica sola en GitHub Pages cada vez que subo cambios.
