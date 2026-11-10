@@ -3,6 +3,45 @@ const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const finePointer = window.matchMedia('(pointer: fine)');
 const metaTheme = document.querySelector('meta[name="theme-color"]');
 
+/* ---------- Loader ---------- */
+// Termina cuando cargaron la página y las imágenes que están a la vista (con un tope), para que nada aparezca a saltos.
+const inView = (node) => {
+  const r = node.getBoundingClientRect();
+  return r.width > 0 && r.height > 0 && r.bottom > 0 && r.top < innerHeight && r.right > 0 && r.left < innerWidth;
+};
+const imageSettled = (img) => (img.complete ? Promise.resolve() : new Promise((resolve) => {
+  img.addEventListener('load', resolve, { once: true });
+  img.addEventListener('error', resolve, { once: true });
+}));
+async function finishLoading() {
+  if (!root.classList.contains('is-loading')) return;
+  const limit = new Promise((resolve) => setTimeout(resolve, 5000));
+  const ready = (async () => {
+    if (document.readyState !== 'complete') await new Promise((resolve) => window.addEventListener('load', resolve, { once: true }));
+    if (document.fonts?.ready) await document.fonts.ready;
+    await Promise.all([...document.images].filter(inView).map(imageSettled));
+  })();
+  await Promise.race([ready, limit]);
+  window.__portfolioReady = true;
+  root.classList.remove('is-loading');
+  root.classList.add('loader-out');
+  window.dispatchEvent(new Event('portfolio-ready'));
+  setTimeout(() => root.classList.remove('loader-out'), 650);
+}
+finishLoading();
+window.addEventListener('pageshow', (event) => {
+  if (event.persisted) root.classList.remove('is-loading', 'loader-out');
+});
+
+// Las imágenes que aún no llegaron arrancan invisibles y se funden al cargar.
+document.querySelectorAll('img').forEach((img) => {
+  if (img.complete) return;
+  img.classList.add('img-wait', 'img-fade');
+  const show = () => img.classList.remove('img-wait');
+  img.addEventListener('load', show, { once: true });
+  img.addEventListener('error', show, { once: true });
+});
+
 function updateTheme() {
   const dark = root.dataset.theme === 'dark';
   document.querySelectorAll('[data-theme-toggle]').forEach((button) => {

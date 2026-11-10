@@ -224,3 +224,35 @@ html{overscroll-behavior-y:none;-webkit-tap-highlight-color:transparent}
 /* Texto que se mueve (botón magnético, rotador del hero): se mantiene en su propia capa para que
    el navegador no cambie cómo dibuja las letras al empezar o terminar el movimiento. */
 .is-magnetic,.identity-inner{will-change:transform;backface-visibility:hidden}
+
+/* ---------- Loader: mismo negro y marca LH que la cortina de transición ---------- */
+html.is-loading{overflow:hidden}
+html.is-loading::after,html.loader-out::after{content:"";position:fixed;inset:0;z-index:1000;background:#000}
+html.is-loading::before,html.loader-out::before{
+  content:"";
+  position:fixed;
+  left:50%;
+  top:50%;
+  z-index:1001;
+  width:44px;
+  height:44px;
+  margin:-22px 0 0 -22px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath fill='%23f7f7f5' d='M5 6h5v23h9v5H5V6Zm17 0h5v10h8V6h5v28h-5V21h-8v13h-5V6Z'/%3E%3Crect fill='%238fc6c7' x='17' y='29' width='3' height='5'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+/* La marca aparece solo si la carga tarda: en cargas rápidas no se llega a ver. */
+html.is-loading::before{opacity:0;animation:loader-mark 1.5s ease-in-out .2s infinite}
+html.loader-out::after{animation:loader-fade .55s ease forwards;pointer-events:none}
+html.loader-out::before{animation:loader-fade-mark .45s ease forwards;pointer-events:none}
+@keyframes loader-mark{0%,100%{opacity:.3;transform:scale(.94)}50%{opacity:1;transform:scale(1)}}
+@keyframes loader-fade{to{opacity:0}}
+@keyframes loader-fade-mark{from{opacity:1}to{opacity:0;transform:scale(1.06)}}
+/* Las animaciones de entrada esperan a que el loader termine. */
+html.is-loading body *,html.is-loading body *::before,html.is-loading body *::after{animation-play-state:paused!important}
+/* Imágenes que llegan tarde: aparecen con un fundido en lugar de saltar. */
+img.img-wait{opacity:0}
+img.img-fade{transition:opacity .55s ease}
+@media (prefers-reduced-motion:reduce){
+  html.is-loading::before{animation:none;opacity:1}
+  html.loader-out::after,html.loader-out::before{animation-duration:.01s}
+  img.img-fade{transition:none}
+}
