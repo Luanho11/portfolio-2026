@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Luis Ángel Hostos Hostos — Desarrollador Full Stack</title>
+<meta name="author" content="Luis Ángel Hostos Hostos">
+<style>
+@font-face{font-family:"Bricolage Grotesque";src:url("../src/fonts/bricolage-grotesque.woff2") format("woff2");font-weight:200 800;font-stretch:75% 100%}
+@font-face{font-family:"Newsreader";src:url("../src/fonts/newsreader.woff2") format("woff2");font-weight:200 800;font-style:normal}
+@font-face{font-family:"Newsreader";src:url("../src/fonts/newsreader-italic.woff2") format("woff2");font-weight:200 800;font-style:italic}
+
+@page{size:A4;margin:0}
+:root{
+  --ink:#141414; --muted:#5a5a54; --accent:#b04a2c; --hair:#d9d6d0; --dash:#8d8d86;
+  --sans:"Bricolage Grotesque",Arial,sans-serif; --serif:"Newsreader",Georgia,serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#fff}
+body{font-family:var(--serif);color:var(--ink);font-size:10.4pt;line-height:1.38;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+a{color:inherit;text-decoration:none}
+li a{font-family:var(--sans);font-size:8.6pt;font-weight:600;white-space:nowrap;margin-left:.6mm;border-bottom:.6pt solid var(--hair)}
+.page{width:210mm;height:297mm;padding:14mm 19mm 10mm;position:relative;overflow:hidden;break-after:page}
+.page:last-child{break-after:auto}
+
+/* ---------- Cabecera ---------- */
+.head{display:grid;grid-template-columns:1fr 28mm;column-gap:10mm;align-items:center}
+h1{font-family:var(--sans);font-weight:750;font-size:30pt;line-height:1;letter-spacing:-.03em;font-stretch:90%}
+.role{font-style:italic;font-size:13.5pt;line-height:1.2;color:var(--accent);margin-top:2.4mm}
+.portfolio{font-family:var(--sans);font-size:9pt;font-weight:600;color:var(--ink);margin-top:2.2mm}
+.portfolio a{border-bottom:.6pt solid var(--ink)}
+.contact{display:flex;justify-content:space-between;gap:4mm;margin-top:5mm;padding:2.3mm 0;border-top:.6pt solid var(--hair);border-bottom:.6pt solid var(--hair);font-family:var(--sans);font-size:8.5pt;color:var(--ink)}
+.photo{width:28mm;height:28mm;border-radius:50%;overflow:hidden;background:#eceae6}
+.photo img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* ---------- Secciones ---------- */
+section{margin-top:5.6mm}
+h2{font-family:var(--sans);font-size:7.9pt;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--accent);margin-bottom:2.4mm}
+.summary{font-size:11pt;line-height:1.42}
+
+.job + .job{margin-top:4.2mm}
+.job-title{display:flex;justify-content:space-between;align-items:baseline;gap:4mm}
+.job-title h3{font-family:var(--sans);font-size:10.6pt;font-weight:700;letter-spacing:-.005em}
+.job-title .date{font-family:var(--sans);font-size:8.6pt;color:var(--muted);white-space:nowrap}
+.job-role{font-style:italic;color:var(--muted);margin-bottom:1.5mm}
+ul{list-style:none}
+li{position:relative;padding-left:4.2mm;margin-top:1.1mm}
+li::before{content:"";position:absolute;left:0;top:.66em;width:1.8mm;height:1.5pt;background:var(--dash)}
+li b{font-family:var(--sans);font-weight:650;font-size:9.2pt}
+.kind{font-family:var(--sans);font-style:normal;font-size:7pt;font-weight:650;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-left:1mm}
+
+.stack{display:grid;grid-template-columns:30mm 1fr;row-gap:1.1mm}
+.stack dt{font-family:var(--sans);font-weight:650;font-size:8.8pt;padding-top:.3mm}
+
+.edu{display:grid;grid-template-columns:1fr 1fr;column-gap:8mm;row-gap:2.6mm}
+.edu h3{font-family:var(--sans);font-size:9.3pt;font-weight:700}
+.edu p{color:var(--muted);font-size:9.6pt;line-height:1.3}
+
+/* ---------- Anexos ---------- */
+.annex h1{font-size:19pt;letter-spacing:-.02em}
+.annex .sub{font-style:italic;color:var(--muted);margin-top:1.6mm}
+.annex figure{margin-top:7mm}
+.annex img{display:block;width:172mm;height:auto;border:.6pt solid var(--hair)}
+</style>
+</head>
+<body>
+<main class="page">
+
+  <header class="head">
+    <div>
+      <h1>Luis Ángel Hostos Hostos</h1>
+      <p class="role">Desarrollador Full Stack · Lima, Perú</p>
+      <p class="portfolio"><a href="https://luanho11.github.io/portfolio-2026/">Portafolio: luanho11.github.io/portfolio-2026</a></p>
+    </div>
+    <div class="photo"><img src="foto-traje.jpg" alt="Luis Ángel Hostos Hostos"></div>
+  </header>
+  <div class="contact">
+    <a href="tel:+51970465608">+51 970 465 608</a>
+    <a href="mailto:luis.hostos.hostos@gmail.com">luis.hostos.hostos@gmail.com</a>
+    <a href="https://www.linkedin.com/in/luishostos">linkedin.com/in/luishostos</a>
+    <a href="https://github.com/Luanho11">github.com/Luanho11</a>
+  </div>
+
+  <section>
+    <h2>Perfil</h2>
+    <p class="summary">Desarrollador Full Stack que ha publicado sistemas reales: la web de una consultora minera, un ERP interno y una plataforma editorial, con React, TypeScript y Firebase.</p>
+  </section>
+
+  <section>
+    <h2>Experiencia</h2>
+    <article class="job">
+      <div class="job-title"><h3>Contratistas Generales Noova S.A.C.</h3><span class="date">Jun 2026 – Nov 2026</span></div>
+      <p class="job-role">Practicante de Sistemas · Responsable del área de TI</p>
+      <ul>
+        <li><b>Área de TI:</b> seleccioné un equipo de 2 personas, definí los requerimientos y la arquitectura de cada proyecto y reporté a gerencia.</li>
+        <li><b>Web corporativa:</b> reemplacé un sitio lento y de catálogo reducido por una web propia en React y TypeScript, con catálogo filtrable, SEO técnico y hosting gratuito en Firebase (antes, unos S/&nbsp;500 al año). <a href="https://www.noovasac.com/">noovasac.com</a></li>
+        <li><b>ERP interno:</b> sustituí el trabajo manual en Excel por 4 módulos (clientes, cotizaciones, ventas y compras) en React y Firebase, con PDF, pedido de precios a proveedores y permisos por rol.</li>
+        <li><b>Intranet de capacitación:</b> coautor en Next.js y Firebase, con roles y sprints semanales en Jira.</li>
+      </ul>
+    </article>
+    <article class="job">
+      <div class="job-title"><h3>Deriva Jurídico</h3><span class="date">2025 – 2026</span></div>
+      <p class="job-role">Desarrollador Web Freelance · estudio de abogados</p>
+      <ul>
+        <li><b>Plataforma editorial</b> propia en JavaScript y Firebase, creada tras el retiro de sus artículos en LinkedIn: panel con roles (cada autor edita los suyos) y vista previa propia al compartir. <a href="https://derivajuridico.com">derivajuridico.com</a></li>
+      </ul>
+    </article>
+  </section>
+
+  <section>
+    <h2>Proyectos</h2>
+    <ul>
+      <li><b>Agente de marketing</b><span class="kind">Noova</span> redacta borradores y exige aprobar cada pieza antes de publicar.</li>
+      <li><b>NVS</b><span class="kind">Personal</span> visualiza redes de ventilación minera en 3D y calcula caudales (Python, PySide6).</li>
+      <li><b>SUMI</b><span class="kind">Personal</span> reparte cargas entre equipos de una red local y prueba inferencia distribuida (llama.cpp).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Tecnologías</h2>
+    <dl class="stack">
+      <dt>Frontend</dt><dd>React · TypeScript · JavaScript · Next.js · Vite · HTML5 · CSS3</dd>
+      <dt>Backend</dt><dd>Java · Spring Boot · Node.js · Python · Flask · REST · JWT</dd>
+      <dt>Datos y nube</dt><dd>Firebase (Auth, Firestore, Functions, Hosting) · MySQL · GitHub Actions</dd>
+      <dt>Web y seguridad</dt><dd>SEO técnico · JSON-LD · Open Graph · roles y permisos · reglas de Firestore</dd>
+      <dt>Método</dt><dd>Git · Scrum · Jira · UML · Postman · Claude Code</dd>
+    </dl>
+  </section>
+
+  <section>
+    <h2>Formación</h2>
+    <div class="edu">
+      <div><h3>Universidad Privada del Norte</h3><p>Ingeniería de Sistemas Computacionales<br>2025 – Actualidad</p></div>
+      <div><h3>CIBERTEC</h3><p>Computación e Informática<br>Egresado · 2021 – 2024</p></div>
+      <div><h3>Scrum Fundamentals Certified (SFC™)</h3><p>SCRUMstudy · Jul 2025 · ID 1088991<br>Certificado y récord de notas: págs. 2 a 4</p></div>
+      <div><h3>Idiomas</h3><p>Español nativo · Inglés avanzado<br>Francés básico (Alianza Francesa)</p></div>
+    </div>
+  </section>
+
+</main>
+
+<main class="page annex">
+  <h2>Anexo 1 · Certificación</h2>
+  <h1>Scrum Fundamentals Certified (SFC™)</h1>
+  <p class="sub">SCRUMstudy · Jul 2025 · ID 1088991</p>
+  <figure><img src="../public/certificates/scrum.webp" alt="Certificado Scrum Fundamentals Certified"></figure>
+</main>
+
+<main class="page annex">
+  <h2>Anexo 2 · Récord de notas (1 de 2)</h2>
+  <h1>CIBERTEC · Computación e Informática</h1>
+  <p class="sub">Periodos académicos I a III</p>
+  <figure><img src="cibertec-1.jpg" alt="Récord de notas de CIBERTEC, periodos I a III"></figure>
+</main>
+
+<main class="page annex">
+  <h2>Anexo 2 · Récord de notas (2 de 2)</h2>
+  <h1>CIBERTEC · Computación e Informática</h1>
+  <p class="sub">Periodos académicos IV a VI</p>
+  <figure><img src="cibertec-2.jpg" alt="Récord de notas de CIBERTEC, periodos IV a VI"></figure>
+</main>
+
+</body>
+</html>
