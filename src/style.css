@@ -256,3 +256,9 @@ img.img-fade{transition:opacity .55s ease}
   html.loader-out::after,html.loader-out::before{animation-duration:.01s}
   img.img-fade{transition:none}
 }
+
+/* Mientras llega una imagen se ve un esqueleto suave, no un hueco vacío. */
+@keyframes img-shimmer{from{background-position:140% 0}to{background-position:-40% 0}}
+.reel-card__media:has(img.img-wait){background:linear-gradient(110deg,#171a1d 30%,#2b3136 50%,#171a1d 70%) 0 0/250% 100%;animation:img-shimmer 1.6s linear infinite}
+.shot__frame:has(img.img-wait)::before{content:"";position:absolute;inset:6% 4%;border-radius:12px;background:linear-gradient(110deg,#171a1d 30%,#2b3136 50%,#171a1d 70%) 0 0/250% 100%;animation:img-shimmer 1.6s linear infinite}
+@media (prefers-reduced-motion:reduce){.reel-card__media:has(img.img-wait),.shot__frame:has(img.img-wait)::before{animation:none}}
