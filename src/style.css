@@ -226,39 +226,30 @@ html{overscroll-behavior-y:none;-webkit-tap-highlight-color:transparent}
 .is-magnetic,.identity-inner{will-change:transform;backface-visibility:hidden}
 
 /* ---------- Loader: mismo negro y marca LH que la cortina de transición ---------- */
-@property --load{syntax:'<number>';inherits:true;initial-value:0}
-html{--load:0}
 html.is-loading{overflow:hidden}
-html.is-loading::after,html.loader-out::after{
-  content:"";
-  position:fixed;
-  inset:0;
-  z-index:1000;
-  /* Barra de avance real: crece desde el centro según las imágenes que ya llegaron. */
-  background:
-    linear-gradient(#8fc6c7,#8fc6c7) 50% calc(50% + 46px)/calc(var(--load) * 1.4px) 3px no-repeat,
-    linear-gradient(rgba(255,255,255,.22),rgba(255,255,255,.22)) 50% calc(50% + 46px)/140px 3px no-repeat,
-    #000;
-  transition:background-size .45s ease;
-}
+html.is-loading::after,html.loader-out::after{content:"";position:fixed;inset:0;z-index:1000;background:#000}
 html.is-loading::before,html.loader-out::before{
   content:"";
   position:fixed;
   left:50%;
   top:50%;
   z-index:1001;
-  width:44px;
-  height:44px;
-  margin:-22px 0 0 -22px;
+  width:42px;
+  height:42px;
+  margin:-21px 0 0 -21px;
   background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath fill='%23f7f7f5' d='M5 6h5v23h9v5H5V6Zm17 0h5v10h8V6h5v28h-5V21h-8v13h-5V6Z'/%3E%3Crect fill='%238fc6c7' x='17' y='29' width='3' height='5'/%3E%3C/svg%3E") center/contain no-repeat;
 }
-/* La marca y la barra aparecen apenas empieza la carga y laten mientras dura. */
-html.is-loading::before{animation:loader-mark 1.5s ease-in-out infinite}
-html.loader-out::after{animation:loader-fade .55s ease forwards;pointer-events:none}
-html.loader-out::before{animation:loader-fade-mark .45s ease forwards;pointer-events:none}
-@keyframes loader-mark{0%,100%{opacity:.35;transform:scale(.94)}50%{opacity:1;transform:scale(1)}}
-@keyframes loader-fade{to{opacity:0}}
-@keyframes loader-fade-mark{from{opacity:1}to{opacity:0;transform:scale(1.06)}}
+/* Si se llega desde otra página, la cortina ya es negra y no se vuelve a fundir. En una visita nueva el negro entra suave. */
+html.is-loading.loader-fresh::after{animation:loader-in .35s ease both}
+html.is-loading.loader-fresh::before{animation:loader-in .35s ease both,loader-mark 2s ease-in-out .35s infinite}
+html.is-loading:not(.loader-fresh)::before{animation:loader-mark 2s ease-in-out infinite}
+/* Salida: el negro se disuelve despacio y la marca se aparta un instante antes. */
+html.loader-out::after{animation:loader-fade .9s cubic-bezier(.4,0,.2,1) forwards;pointer-events:none}
+html.loader-out::before{animation:loader-fade-mark .6s cubic-bezier(.4,0,.2,1) forwards;pointer-events:none}
+@keyframes loader-in{from{opacity:0}to{opacity:1}}
+@keyframes loader-mark{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(.95)}}
+@keyframes loader-fade{from{opacity:1}to{opacity:0}}
+@keyframes loader-fade-mark{from{opacity:1;transform:scale(1)}to{opacity:0;transform:scale(1.12)}}
 /* Las animaciones de entrada esperan a que el loader termine. */
 html.is-loading body *,html.is-loading body *::before,html.is-loading body *::after{animation-play-state:paused!important}
 
@@ -271,8 +262,8 @@ img.img-failed{opacity:0}
 .reel-card__media:has(img.img-failed){background:linear-gradient(160deg,#3a4146,#15181b)}
 .shot__frame:has(img.img-wait)::before{content:"";position:absolute;inset:6% 4%;border-radius:12px;background:linear-gradient(110deg,#171a1d 30%,#2b3136 50%,#171a1d 70%) 0 0/250% 100%;animation:img-shimmer 1.6s linear infinite}
 @media (prefers-reduced-motion:reduce){
-  html.is-loading::before{animation:none;opacity:1}
-  html.loader-out::after,html.loader-out::before{animation-duration:.01s}
+  html.is-loading::after,html.is-loading::before{animation:none!important;opacity:1}
+  html.loader-out::after,html.loader-out::before{animation-duration:.25s}
   img.img-wait,.shot__frame:has(img.img-wait)::before{animation:none}
   img.img-in{animation:none}
 }

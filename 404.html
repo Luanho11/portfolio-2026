@@ -24,6 +24,7 @@
     (() => {
       const root = document.documentElement;
       root.classList.add('is-loading');
+      try { if (sessionStorage.getItem('portfolio-transition') !== '1') root.classList.add('loader-fresh'); } catch { root.classList.add('loader-fresh'); }
       setTimeout(() => root.classList.remove('is-loading'), 10000);
       root.dataset.theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
       try {
