@@ -514,6 +514,7 @@ const COPY_EN = new Map(Object.entries({
   "Cloud y DevOps":"Cloud and DevOps",
   "Ver todo":"See all",
   "Ocultar":"Hide",
+  "Ingeniería inversa (REA)":"Reverse engineering (REA)",
   "Menú":"Menu",
   "Volver arriba":"Back to top"
 }));

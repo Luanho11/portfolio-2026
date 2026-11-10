@@ -520,4 +520,4 @@ html[data-theme="dark"] .reel-gallery{background:#0d0d0c}
 .reel-filter button[aria-pressed="true"]{color:var(--ink);border-bottom-color:currentColor}
 .reel-filter button:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-radius:4px}
 .reel-stage.is-detail .reel-filter{pointer-events:none}
-@media (max-width:720px){.reel-filter{gap:14px}.reel-filter button{font-size:15px}}
+@media (max-width:720px){.reel-filter{max-width:100%;gap:14px;justify-content:flex-start;overflow-x:auto;scrollbar-width:none}.reel-filter::-webkit-scrollbar{display:none}.reel-filter button{flex:0 0 auto;font-size:15px;white-space:nowrap}}
